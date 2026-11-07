@@ -1,0 +1,50 @@
+import { createServerClient } from "@supabase/ssr";
+import { NextResponse, type NextRequest } from "next/server";
+
+// Refreshes the Supabase session cookie on each request and protects the app.
+// Signed-out visitors to /app or /onboarding go to /login; signed-in visitors
+// to the auth pages go to the app. Data access itself is enforced by RLS.
+
+const PROTECTED = ["/app", "/onboarding"];
+const AUTH_PAGES = ["/login", "/register"];
+
+export async function proxy(request: NextRequest) {
+  let response = NextResponse.next({ request });
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+  if (!url || !key) return response;
+
+  const supabase = createServerClient(url, key, {
+    cookies: {
+      getAll: () => request.cookies.getAll(),
+      setAll: (list) => {
+        for (const { name, value } of list) request.cookies.set(name, value);
+        response = NextResponse.next({ request });
+        for (const { name, value, options } of list) response.cookies.set(name, value, options);
+      },
+    },
+  });
+
+  // getClaims() verifies the JWT; don't trust an unverified session here.
+  const { data } = await supabase.auth.getClaims();
+  const signedIn = Boolean(data?.claims?.sub);
+  const path = request.nextUrl.pathname;
+
+  const redirect = (to: string, keepNext = false) => {
+    const dest = request.nextUrl.clone();
+    dest.pathname = to;
+    dest.search = "";
+    if (keepNext) dest.searchParams.set("next", path + request.nextUrl.search);
+    const r = NextResponse.redirect(dest);
+    for (const c of response.cookies.getAll()) r.cookies.set(c);
+    return r;
+  };
+
+  if (!signedIn && PROTECTED.some((p) => path === p || path.startsWith(p + "/"))) return redirect("/login", true);
+  if (signedIn && AUTH_PAGES.includes(path)) return redirect("/app");
+  return response;
+}
+
+export const config = {
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|icons/|manifest.webmanifest|sw.js|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|csv|txt)$).*)"],
+};

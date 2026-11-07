@@ -1,0 +1,191 @@
+@import "tailwindcss";
+
+/* Limus design tokens — extracted from the Lumis Framer template.
+   Type: Geist 500 with tight tracking; Manrope 600 for primary buttons.
+   Neutrals: #000 / #3d3d3d / #616161 / #7a7a7a / #adadad on #fff / #f9fafb / #f3f4f6.
+   Accent: #124eeb, soft #dae2f7, light #80b9ff, navy #0c2442. */
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+:root {
+  --bg: #ffffff;
+  --bg-subtle: #f9fafb;
+  --bg-muted: #f3f4f6;
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --line: #e5e7eb;
+  --line-strong: #d1d5db;
+  --ink: #000000;
+  --ink-2: #1c1c1c;
+  --ink-3: #3d3d3d;
+  --body: #616161;
+  --muted: #7a7a7a;
+  --faint: #adadad;
+  --primary: #124eeb;
+  --primary-hover: #0f43cc;
+  --primary-soft: #dae2f7;
+  --primary-light: #80b9ff;
+  --primary-text: #124eeb;
+  --navy: #0c2442;
+  --profit: #12b33f;
+  --profit-soft: #e3f6e8;
+  --loss: #e5484d;
+  --loss-soft: #fdecec;
+  --warn: #c27c0e;
+  --warn-soft: #fbf1df;
+  --on-primary: #ffffff;
+  --overlay: rgba(12, 18, 32, 0.32);
+  --series-1: #124eeb;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
+  --series-4: #eda100;
+  --series-5: #e87ba4;
+  --shadow-btn: 0px 0.48px 0.87px -1.42px rgba(0, 0, 0, 0.16), 0px 1.83px 3.3px -2.83px rgba(0, 0, 0, 0.14), 0px 8px 14.4px -4.25px rgba(0, 0, 0, 0.03);
+  --shadow-card: 0px 1px 4px 0px rgba(24, 32, 60, 0.06);
+  --shadow-pop: 0px 0.6px 1.57px -1.5px rgba(0, 0, 0, 0.17), 0px 2.29px 5.95px -3px rgba(0, 0, 0, 0.14), 0px 10px 26px -4.5px rgba(0, 0, 0, 0.06);
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --bg: #0a0a0a;
+  --bg-subtle: #101010;
+  --bg-muted: #191919;
+  --surface: #121212;
+  --surface-raised: #181818;
+  --line: #242424;
+  --line-strong: #333333;
+  --ink: #ffffff;
+  --ink-2: #f2f2f2;
+  --ink-3: #d4d4d4;
+  --body: #a3a3a3;
+  --muted: #8a8a8a;
+  --faint: #5c5c5c;
+  --primary: #2b62f0;
+  --primary-hover: #4673f2;
+  --primary-soft: #14224a;
+  --primary-light: #80b9ff;
+  --primary-text: #7ea2ff;
+  --profit: #2bc45a;
+  --profit-soft: #0f2a18;
+  --loss: #f06468;
+  --loss-soft: #321515;
+  --warn: #e0a43a;
+  --warn-soft: #2d2210;
+  --overlay: rgba(0, 0, 0, 0.6);
+  --series-1: #3d74f5;
+  --series-2: #d95926;
+  --series-3: #199e70;
+  --series-4: #c98500;
+  --series-5: #d55181;
+  --shadow-btn: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-pop: 0 12px 32px -8px rgba(0, 0, 0, 0.7);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-button: var(--font-manrope), var(--font-geist), sans-serif;
+
+  --color-bg: var(--bg);
+  --color-subtle: var(--bg-subtle);
+  --color-muted-bg: var(--bg-muted);
+  --color-surface: var(--surface);
+  --color-raised: var(--surface-raised);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-body: var(--body);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-light: var(--primary-light);
+  --color-primary-text: var(--primary-text);
+  --color-navy: var(--navy);
+  --color-profit: var(--profit);
+  --color-profit-soft: var(--profit-soft);
+  --color-loss: var(--loss);
+  --color-loss-soft: var(--loss-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-on-primary: var(--on-primary);
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  --shadow-btn: var(--shadow-btn);
+  --shadow-card: var(--shadow-card);
+  --shadow-pop: var(--shadow-pop);
+
+  --text-display: 3.5rem;
+  --text-display--line-height: 1.05;
+  --text-display--letter-spacing: -0.04em;
+  --text-h1: 2.8rem;
+  --text-h1--line-height: 1.05;
+  --text-h1--letter-spacing: -0.04em;
+  --text-h2: 2rem;
+  --text-h2--line-height: 1.1;
+  --text-h2--letter-spacing: -0.04em;
+  --text-h3: 1.5rem;
+  --text-h3--line-height: 1.3;
+  --text-h3--letter-spacing: -0.04em;
+  --text-h4: 1.25rem;
+  --text-h4--line-height: 1.3;
+  --text-h4--letter-spacing: -0.035em;
+
+  --animate-fade-in: fade-in 0.24s ease-out both;
+  --animate-rise: rise 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  --animate-shimmer: shimmer 1.4s linear infinite;
+}
+
+@keyframes fade-in { from { opacity: 0 } to { opacity: 1 } }
+@keyframes rise { from { opacity: 0; transform: translateY(6px) } to { opacity: 1; transform: none } }
+@keyframes shimmer { from { background-position: -200% 0 } to { background-position: 200% 0 } }
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  h1, h2, h3, h4 { font-weight: 500; color: var(--ink); }
+  ::selection { background: var(--primary-soft); color: var(--ink); }
+  :focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+  input, select, textarea, button { font: inherit; letter-spacing: inherit; }
+  button { cursor: pointer; }
+  button:disabled { cursor: not-allowed; }
+  input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type="number"] { -moz-appearance: textfield; }
+}
+
+@layer utilities {
+  .tnum { font-variant-numeric: tabular-nums; }
+  .scrollbar-thin { scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent; }
+  .skeleton {
+    background: linear-gradient(90deg, var(--bg-muted) 25%, var(--bg-subtle) 37%, var(--bg-muted) 63%);
+    background-size: 400% 100%;
+    animation: var(--animate-shimmer);
+    border-radius: 6px;
+  }
+  .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* Recharts defaults to match the theme */
+.recharts-cartesian-axis-tick-value { fill: var(--muted); font-size: 11px; }
+.recharts-surface:focus, .recharts-wrapper:focus, .recharts-sector:focus, .recharts-wrapper *:focus { outline: none; }
