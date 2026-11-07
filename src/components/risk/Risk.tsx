@@ -84,7 +84,7 @@ export function RiskPage() {
         </div>
       )}
 
-      <div className="mb-8 grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
+      <div className="stagger mb-8 grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
         <PositionSizeCalc key={`ps-${account?.id}`} currency={cur} balance={balanceDefault} defaultRisk={profile?.default_risk_pct ?? 1} />
         <RiskPercentCalc key={`rp-${account?.id}`} currency={cur} balance={balanceDefault} />
         <RewardRiskCalc />

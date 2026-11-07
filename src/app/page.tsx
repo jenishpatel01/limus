@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import { Logo, LogoMark } from "@/components/brand/Logo";
 import { PixelMosaic } from "@/components/brand/PixelMosaic";
+import { CountUp, FadeIn, Parallax, Reveal, ScrollLitText, Stagger, Words } from "@/components/motion";
 
 export const metadata: Metadata = {
   title: "Limus — Turn your trades into decisions",
@@ -60,19 +61,21 @@ function Hero() {
     <section className="relative overflow-hidden">
       <div className="mx-auto grid max-w-[1400px] items-center gap-12 px-4 pb-20 pt-14 sm:px-8 lg:grid-cols-[minmax(0,560px)_1fr] lg:px-[52px] lg:pb-28 lg:pt-24">
         <div className="relative z-10">
-          <a href="#features" className="inline-flex items-center overflow-hidden rounded-md text-[12px] shadow-[0_0_0_1px_#e5e7eb]">
+          <FadeIn><a href="#features" className="inline-flex items-center overflow-hidden rounded-md text-[12px] shadow-[0_0_0_1px_#e5e7eb] transition-shadow hover:shadow-[0_0_0_1px_#d1d5db]">
             <span className="bg-white px-2.5 py-1.5 font-medium">Journal · Portfolio · Analytics</span>
             <span className="flex items-center gap-1 border-l border-[#e5e7eb] bg-[#f9fafb] px-2.5 py-1.5 text-[#616161]">See features <ChevronDown className="size-3 -rotate-90" /></span>
-          </a>
-          <h1 className="mt-7 text-[44px] font-medium leading-[1.02] tracking-[-0.045em] sm:text-[60px]">Turn your trades<br />into decisions.</h1>
-          <p className="mt-6 max-w-md text-[18px] font-medium leading-[1.5] tracking-[-0.02em] text-[#616161]">Log every trade, keep each account separate, and watch Limus show you exactly where your edge comes from.</p>
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            <Link href="/register" className={btnPrimary}>Start for free</Link>
-            <Link href="/login" className={btnSecondary}>Log in</Link>
-          </div>
-          <p className="mt-4 text-[12.5px] font-medium text-[#124eeb]">Free to use · No credit card · Explore with a demo account</p>
+          </a></FadeIn>
+          <Words text={"Turn your trades\ninto decisions."} className="mt-7 text-[44px] font-medium leading-[1.02] tracking-[-0.045em] sm:text-[60px]" delay={0.15} />
+          <FadeIn delay={0.55}><p className="mt-6 max-w-md text-[18px] font-medium leading-[1.5] tracking-[-0.02em] text-[#616161]">Log every trade, keep each account separate, and watch Limus show you exactly where your edge comes from.</p></FadeIn>
+          <FadeIn delay={0.75}>
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <Link href="/register" className={btnPrimary}>Start for free</Link>
+              <Link href="/login" className={btnSecondary}>Log in</Link>
+            </div>
+            <p className="mt-4 flex items-center gap-1.5 text-[12.5px] font-medium text-[#124eeb]"><span className="live-dot size-1.5 rounded-full bg-[#124eeb]" />Free to use · No credit card · Explore with a demo account</p>
+          </FadeIn>
         </div>
-        <HeroCollage />
+        <FadeIn delay={0.35} y={30}><HeroCollage /></FadeIn>
       </div>
     </section>
   );
@@ -84,11 +87,11 @@ function HeroCollage() {
   return (
     <div aria-hidden className="relative h-[420px] select-none [perspective:1600px] lg:h-[520px]">
       <div className="absolute inset-0 origin-center [transform:rotateX(38deg)_rotateZ(-24deg)_scale(1.05)] [transform-style:preserve-3d]">
-        <div className="grid grid-cols-2 gap-5 opacity-90 grayscale-[35%]">
+        <div className="float-slow grid grid-cols-2 gap-5 opacity-90 grayscale-[35%]">
           <Tile className="col-span-2 h-44">
             <p className="text-[11px] text-[#7a7a7a]">Equity curve</p>
             <p className="text-[22px] font-medium tracking-[-0.03em]">$31,482.20</p>
-            <svg viewBox="0 0 300 70" className="mt-2 h-16 w-full"><path d="M0 60 L30 55 L60 58 L90 44 L120 47 L150 34 L180 38 L210 24 L240 27 L270 14 L300 10" fill="none" stroke="#124eeb" strokeWidth="2.5" /><path d="M0 60 L30 55 L60 58 L90 44 L120 47 L150 34 L180 38 L210 24 L240 27 L270 14 L300 10 L300 70 L0 70Z" fill="#124eeb" opacity=".08" /></svg>
+            <svg viewBox="0 0 300 70" className="mt-2 h-16 w-full"><path className="draw-line" style={{ ["--len" as string]: 360 }} d="M0 60 L30 55 L60 58 L90 44 L120 47 L150 34 L180 38 L210 24 L240 27 L270 14 L300 10" fill="none" stroke="#124eeb" strokeWidth="2.5" /><path d="M0 60 L30 55 L60 58 L90 44 L120 47 L150 34 L180 38 L210 24 L240 27 L270 14 L300 10 L300 70 L0 70Z" fill="#124eeb" opacity=".08" /></svg>
           </Tile>
           <Tile className="h-40">
             <p className="text-[11px] text-[#7a7a7a]">Win rate</p>
@@ -132,9 +135,11 @@ function Markets() {
     <section className="border-y border-[#e5e7eb] bg-[#f9fafb]">
       <div className="mx-auto flex max-w-[1400px] flex-col items-center gap-6 px-4 py-12 sm:px-8 md:flex-row md:justify-between lg:px-[52px]">
         <p className="max-w-xs text-center text-[16px] font-medium leading-snug tracking-[-0.02em] text-[#616161] md:text-left"><span className="text-black">Built for every market</span> you trade, with correct contract math for each.</p>
-        <ul className="flex flex-wrap justify-center gap-x-10 gap-y-3">
-          {items.map((i) => <li key={i} className="flex items-center gap-2 text-[18px] font-medium tracking-[-0.03em]"><LogoMark size={14} />{i}</li>)}
-        </ul>
+        <div className="relative w-full overflow-hidden md:max-w-[640px] [mask-image:linear-gradient(90deg,transparent,#000_12%,#000_88%,transparent)]">
+          <ul className="marquee flex w-max gap-12">
+            {[...items, ...items, ...items, ...items].map((i, k) => <li key={k} aria-hidden={k >= items.length} className="flex shrink-0 items-center gap-2 text-[18px] font-medium tracking-[-0.03em]"><LogoMark size={14} />{i}</li>)}
+          </ul>
+        </div>
       </div>
     </section>
   );
@@ -149,15 +154,15 @@ function HowItWorks() {
   return (
     <section id="how" className="scroll-mt-20 py-24 lg:py-32">
       <div className="mx-auto max-w-[1400px] px-4 sm:px-8 lg:px-[52px]">
-        <SectionHead eyebrow="How it works" title="From trade to insight in 3 simple steps." />
-        <div className="mt-16 grid gap-10 md:grid-cols-3 md:gap-0">
+        <Reveal><SectionHead eyebrow="How it works" title="From trade to insight in 3 simple steps." /></Reveal>
+        <Stagger className="mt-16 grid gap-10 md:grid-cols-3 md:gap-0" gap={0.15}>
           {steps.map((s, i) => (
             <div key={s.t} className={`px-0 md:px-10 ${i > 0 ? "md:border-l md:border-[#e5e7eb]" : ""}`}>
               <s.icon className="size-6" strokeWidth={1.5} />
               <p className="mt-5 text-[16px] font-medium leading-[1.5] tracking-[-0.02em] text-[#616161]"><span className="text-black">{s.t}</span> {s.d}</p>
             </div>
           ))}
-        </div>
+        </Stagger>
       </div>
     </section>
   );
@@ -168,7 +173,7 @@ function ProductPreview() {
   return (
     <section className="pb-24 lg:pb-32">
       <div className="mx-auto max-w-[1400px] px-4 sm:px-8 lg:px-[52px]">
-        <div className="overflow-hidden rounded-2xl bg-white shadow-[0_0_0_1px_#e5e7eb,0_10px_26px_-4.5px_rgba(0,0,0,0.06)]">
+        <Reveal y={48} amount={0.15}><div className="overflow-hidden rounded-2xl bg-white shadow-[0_0_0_1px_#e5e7eb,0_10px_26px_-4.5px_rgba(0,0,0,0.06)]">
           <div className="grid lg:grid-cols-[230px_1fr]">
             <aside className="hidden border-r border-[#e5e7eb] p-4 lg:block">
               <div className="flex items-center gap-2.5 rounded-lg px-2 py-2"><span className="flex size-8 items-center justify-center rounded-full bg-[#0c2442] text-[12px] text-white">AM</span><span><span className="block text-[13px] font-medium">Alex Morgan</span><span className="block text-[11.5px] text-[#7a7a7a]">Sample account</span></span></div>
@@ -186,17 +191,17 @@ function ProductPreview() {
               </div>
               <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
                 {stats.map(([l, v, c]) => (
-                  <div key={l} className="rounded-xl p-4 shadow-[0_0_0_1px_#e5e7eb]"><p className="text-[12.5px] text-[#7a7a7a]">{l}</p><p className="mt-1 text-[22px] font-medium tracking-[-0.03em]" style={{ color: c }}>{v}</p></div>
+                  <div key={l} className="rounded-xl p-4 shadow-[0_0_0_1px_#e5e7eb]"><p className="text-[12.5px] text-[#7a7a7a]">{l}</p><p className="mt-1 text-[22px] font-medium tracking-[-0.03em]" style={{ color: c }}><CountUp value={v} /></p></div>
                 ))}
               </div>
               <div className="mt-4 rounded-xl p-5 shadow-[0_0_0_1px_#e5e7eb]">
                 <p className="text-[14px] font-medium">Equity curve</p>
-                <svg viewBox="0 0 800 180" className="mt-3 h-44 w-full" preserveAspectRatio="none"><g stroke="#e5e7eb" strokeDasharray="3 4">{[30, 75, 120, 165].map((y) => <line key={y} x1="0" x2="800" y1={y} y2={y} />)}</g><path d="M0 150 C60 146 90 140 130 132 S200 120 240 126 S320 100 360 96 S430 104 470 84 S560 70 600 58 S700 46 740 34 L800 26" fill="none" stroke="#124eeb" strokeWidth="2.5" /></svg>
+                <svg viewBox="0 0 800 180" className="mt-3 h-44 w-full" preserveAspectRatio="none"><g stroke="#e5e7eb" strokeDasharray="3 4">{[30, 75, 120, 165].map((y) => <line key={y} x1="0" x2="800" y1={y} y2={y} />)}</g><path className="draw-line" style={{ ["--len" as string]: 900 }} d="M0 150 C60 146 90 140 130 132 S200 120 240 126 S320 100 360 96 S430 104 470 84 S560 70 600 58 S700 46 740 34 L800 26" fill="none" stroke="#124eeb" strokeWidth="2.5" /></svg>
               </div>
               <p className="mt-3 text-[11.5px] text-[#adadad]">Illustration with sample numbers.</p>
             </div>
           </div>
-        </div>
+        </div></Reveal>
       </div>
     </section>
   );
@@ -206,9 +211,11 @@ function Statement() {
   return (
     <section className="bg-black py-28 text-white lg:py-36">
       <div className="mx-auto max-w-[760px] px-6">
-        <p className="text-[24px] font-medium leading-[1.3] tracking-[-0.035em] sm:text-[30px]">A trade isn&apos;t just a number. It&apos;s a decision.</p>
-        <p className="mt-6 text-[24px] font-medium leading-[1.3] tracking-[-0.035em] text-[#adadad] sm:text-[30px]">Limus keeps the numbers honest and the context attached: the setup, the emotions, the mistakes, the lesson. So every trade teaches you something.</p>
-        <p className="mt-6 text-[24px] font-medium leading-[1.3] tracking-[-0.035em] sm:text-[30px]">Less guessing. <span className="text-[#80b9ff]">More clarity.</span></p>
+        <ScrollLitText className="text-[24px] font-medium leading-[1.3] tracking-[-0.035em] sm:text-[30px]" dim="#333333" lit="#ffffff" paragraphs={[
+          { text: "A trade isn't just a number. It's a decision." },
+          { text: "Limus keeps the numbers honest and the context attached: the setup, the emotions, the mistakes, the lesson. So every trade teaches you something.", accent: "#adadad" },
+          { text: "Less guessing. More clarity.", accent: "#80b9ff" },
+        ]} />
       </div>
     </section>
   );
@@ -223,7 +230,7 @@ function SpeedSection() {
   return (
     <section className="py-24 lg:py-32">
       <div className="mx-auto grid max-w-[1400px] items-center gap-14 px-4 sm:px-8 lg:grid-cols-[minmax(0,480px)_1fr] lg:px-[52px]">
-        <div>
+        <Reveal>
           <p className="text-[14px] font-medium text-[#124eeb]">Precision meets discipline</p>
           <h2 className="mt-3 text-[30px] font-medium leading-[1.15] tracking-[-0.04em] sm:text-[34px]">Spreadsheets take hours. Limus takes seconds. <span className="text-[#7a7a7a]">Focus on trading, not formulas.</span></h2>
           <p className="mt-5 text-[16px] font-medium leading-[1.5] tracking-[-0.02em] text-[#616161]">Contract sizes, pip values, currency conversion and costs are handled for forex, crypto, stocks, indices and commodities.</p>
@@ -235,8 +242,8 @@ function SpeedSection() {
               </li>
             ))}
           </ul>
-        </div>
-        <div aria-hidden className="rounded-2xl bg-white p-6 shadow-[0_0_0_1px_#e5e7eb,0_10px_26px_-4.5px_rgba(0,0,0,0.06)]">
+        </Reveal>
+        <Parallax distance={40}><Reveal delay={0.15}><div aria-hidden className="rounded-2xl bg-white p-6 shadow-[0_0_0_1px_#e5e7eb,0_10px_26px_-4.5px_rgba(0,0,0,0.06)]">
           <div className="flex gap-1 text-[12px]">{["Overview", "Strategies", "Sessions", "Calendar"].map((t, i) => <span key={t} className={`rounded-md px-2.5 py-1 ${i === 0 ? "bg-[#f3f4f6] text-black" : "text-[#7a7a7a]"}`}>{t}</span>)}</div>
           <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
             {[["Expectancy", "$42.10"], ["Avg R", "+0.38R"], ["Payoff", "1.72"], ["Recovery", "3.1"]].map(([l, v]) => (
@@ -252,7 +259,7 @@ function SpeedSection() {
             </div>
           </div>
           <p className="mt-3 text-[11.5px] text-[#adadad]">Illustration with sample numbers.</p>
-        </div>
+        </div></Reveal></Parallax>
       </div>
     </section>
   );
@@ -272,16 +279,16 @@ function Features() {
   return (
     <section id="features" className="scroll-mt-20 border-t border-[#e5e7eb] bg-[#f9fafb] py-24 lg:py-32">
       <div className="mx-auto max-w-[1400px] px-4 sm:px-8 lg:px-[52px]">
-        <SectionHead eyebrow="Features" title={<>Everything you need to<br className="hidden sm:block" /> trade with clarity.</>} sub="From your first trade to a full performance review, Limus gives you professional tools without the spreadsheet." />
-        <div className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <Reveal><SectionHead eyebrow="Features" title={<>Everything you need to<br className="hidden sm:block" /> trade with clarity.</>} sub="From your first trade to a full performance review, Limus gives you professional tools without the spreadsheet." /></Reveal>
+        <Stagger className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" gap={0.06}>
           {items.map((f) => (
-            <div key={f.t} className="rounded-xl bg-white p-6 shadow-[0_0_0_1px_#e5e7eb]">
+            <div key={f.t} className="lift h-full rounded-xl bg-white p-6 shadow-[0_0_0_1px_#e5e7eb]">
               <f.icon className="size-6" strokeWidth={1.5} />
               <p className="mt-6 text-[16px] font-medium tracking-[-0.02em]">{f.t}</p>
               <p className="mt-1.5 text-[14px] font-medium leading-[1.5] text-[#7a7a7a]">{f.d}</p>
             </div>
           ))}
-        </div>
+        </Stagger>
       </div>
     </section>
   );
@@ -297,15 +304,15 @@ function Security() {
   return (
     <section id="security" className="scroll-mt-20 py-24 lg:py-32">
       <div className="mx-auto max-w-[1400px] px-4 sm:px-8 lg:px-[52px]">
-        <SectionHead eyebrow="Security" title="Your trades stay yours." sub="Your trading history is sensitive. Limus is built so that nobody else can see it." />
-        <div className="mt-16 grid overflow-hidden rounded-xl shadow-[0_0_0_1px_#e5e7eb] sm:grid-cols-2 lg:grid-cols-4">
+        <Reveal><SectionHead eyebrow="Security" title="Your trades stay yours." sub="Your trading history is sensitive. Limus is built so that nobody else can see it." /></Reveal>
+        <Reveal delay={0.1}><div className="mt-16 grid overflow-hidden rounded-xl shadow-[0_0_0_1px_#e5e7eb] sm:grid-cols-2 lg:grid-cols-4">
           {items.map((s, i) => (
             <div key={s.t} className={`p-6 ${i > 0 ? "border-t border-[#e5e7eb] sm:border-t-0 sm:border-l" : ""} ${i === 2 ? "sm:border-l-0 sm:border-t lg:border-l lg:border-t-0" : ""} ${i === 3 ? "sm:border-t lg:border-t-0" : ""}`}>
               <p className="flex items-center gap-2 text-[14px] font-medium"><s.icon className="size-4" strokeWidth={1.5} />{s.t}</p>
               <p className="mt-2 text-[13px] font-medium leading-[1.5] text-[#7a7a7a]">{s.d}</p>
             </div>
           ))}
-        </div>
+        </div></Reveal>
       </div>
     </section>
   );
@@ -323,19 +330,19 @@ function Faq() {
   return (
     <section id="faq" className="scroll-mt-20 border-t border-[#e5e7eb] py-24 lg:py-32">
       <div className="mx-auto grid max-w-[1400px] gap-12 px-4 sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:px-[52px]">
-        <div>
+        <Reveal>
           <h2 className="text-[34px] font-medium leading-[1.08] tracking-[-0.04em] sm:text-[44px]">Frequently<br />asked questions.</h2>
           <p className="mt-5 text-[16px] font-medium text-[#616161]">Have another question?</p>
           <Link href="/register" className="mt-2 inline-flex items-center gap-1 text-[14px] font-medium">Try it with the demo account <ArrowRight className="size-3.5" /></Link>
-        </div>
-        <div className="space-y-3">
+        </Reveal>
+        <Stagger className="space-y-3" gap={0.07}>
           {qs.map(([q, a]) => (
             <details key={q} className="group rounded-xl bg-white shadow-[0_0_0_1px_#e5e7eb] [&_summary::-webkit-details-marker]:hidden">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 text-[15px] font-medium tracking-[-0.02em]">{q}<ChevronDown className="size-4 shrink-0 text-[#7a7a7a] transition-transform group-open:rotate-180" /></summary>
-              <p className="px-5 pb-5 text-[14px] font-medium leading-[1.6] text-[#616161]">{a}</p>
+              <p className="animate-fade-in px-5 pb-5 text-[14px] font-medium leading-[1.6] text-[#616161]">{a}</p>
             </details>
           ))}
-        </div>
+        </Stagger>
       </div>
     </section>
   );
@@ -344,9 +351,9 @@ function Faq() {
 function Cta() {
   return (
     <section className="relative overflow-hidden">
-      <PixelMosaic className="absolute inset-0 h-full w-full" cols={40} rows={12} />
+      <PixelMosaic className="absolute inset-0 h-full w-full" cols={40} rows={12} animated />
       <div className="relative mx-auto flex max-w-[1400px] flex-col items-center px-4 py-28 text-center sm:py-36">
-        <h2 className="text-[34px] font-medium leading-[1.08] tracking-[-0.04em] sm:text-[48px]">Ready to trade<br />with more clarity?</h2>
+        <Reveal><h2 className="text-[34px] font-medium leading-[1.08] tracking-[-0.04em] sm:text-[48px]">Ready to trade<br />with more clarity?</h2></Reveal>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link href="/register" className={btnPrimary}>Start for free</Link>
           <a href="#features" className={btnSecondary}>See features</a>

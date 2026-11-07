@@ -145,7 +145,7 @@ export function Dashboard() {
       </Card>
 
       {/* KPI grid */}
-      <div className="mb-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+      <div className="stagger mb-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <StatCard icon={<Sigma />} label="Net profit (period)" value={money(stats.netPnl, currency, { sign: true })} tone={pnlTone(stats.netPnl)} sub={`${stats.totalTrades} trades`} />
         <StatCard icon={<Percent />} label="Win rate" value={pct(stats.winRate, 1)} sub={<span><span className="text-profit">{stats.wins}W</span> · <span className="text-loss">{stats.losses}L</span></span>} />
         <StatCard icon={<Scale />} label="Profit factor" value={ratio(stats.profitFactor)} hint="Gross profit ÷ gross loss" />
@@ -156,7 +156,7 @@ export function Dashboard() {
         <StatCard icon={<Gauge />} label="Open positions" value={openTrades.length} sub={portfolio.openRisk ? `${money(portfolio.openRisk, currency, { compact: true })} at risk` : undefined} />
       </div>
 
-      <div className="mb-6 grid gap-4 lg:grid-cols-2">
+      <div className="stagger mb-6 grid gap-4 lg:grid-cols-2">
         <Card>
           <CardHeader title="Daily P&L" subtitle={`${dayLabel(dailyFrom)} – ${dayLabel(range.to ?? today)}`} />
           <div className="p-4 pt-3"><PnlBars data={dailyData} currency={currency} height={230} /></div>
@@ -167,7 +167,7 @@ export function Dashboard() {
         </Card>
       </div>
 
-      <div className="mb-6 grid gap-4 lg:grid-cols-3">
+      <div className="stagger mb-6 grid gap-4 lg:grid-cols-3">
         <Card>
           <CardHeader title="Asset allocation" subtitle="Share of closed trades by asset class" />
           <div className="p-5">
@@ -266,9 +266,9 @@ export function Dashboard() {
 
       <Card>
         <CardHeader title="Account summaries" action={<Link href="/app/portfolio" className="text-[13px] text-primary-text hover:underline">Manage accounts</Link>} />
-        <div className="grid gap-3 p-5 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="stagger grid gap-3 p-5 sm:grid-cols-2 xl:grid-cols-3">
           {scopedSummaries.map((s) => (
-            <Link key={s.account.id} href={`/app/portfolio/${s.account.id}`} className="rounded-lg p-4 shadow-[0_0_0_1px_var(--line)] transition-colors hover:bg-subtle">
+            <Link key={s.account.id} href={`/app/portfolio/${s.account.id}`} className="lift block rounded-lg p-4 shadow-[0_0_0_1px_var(--line)]">
               <div className="flex items-center justify-between gap-2">
                 <p className="truncate text-[14px] font-medium">{s.account.name}</p>
                 {s.account.is_demo ? <Badge tone="warn">Demo</Badge> : <Badge tone={s.account.status === "active" ? "profit" : s.account.status === "breached" ? "loss" : "neutral"}>{s.account.status}</Badge>}

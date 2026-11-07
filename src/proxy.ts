@@ -41,7 +41,10 @@ export async function proxy(request: NextRequest) {
   };
 
   if (!signedIn && PROTECTED.some((p) => path === p || path.startsWith(p + "/"))) return redirect("/login", true);
-  if (signedIn && AUTH_PAGES.includes(path)) return redirect("/app");
+  // Background prefetches of auth pages (e.g. the "Create account" link) must not be redirected,
+  // or the router receives the wrong segment.
+  const isPrefetch = request.headers.has("next-router-prefetch");
+  if (signedIn && AUTH_PAGES.includes(path) && !isPrefetch) return redirect("/app");
   return response;
 }
 

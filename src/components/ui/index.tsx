@@ -6,6 +6,8 @@ import {
   type ButtonHTMLAttributes, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes, type TextareaHTMLAttributes,
 } from "react";
 import { createPortal } from "react-dom";
+import { motion } from "motion/react";
+import { CountUp } from "@/components/motion";
 import Link from "next/link";
 import { AlertTriangle, Check, ChevronDown, Info, Loader2, X } from "lucide-react";
 
@@ -16,7 +18,7 @@ export const cx = clsx;
 type ButtonVariant = "primary" | "secondary" | "dark" | "ghost" | "danger" | "link";
 type ButtonSize = "sm" | "md" | "lg";
 
-const buttonBase = "inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md font-medium transition-[background-color,box-shadow,color,opacity] duration-150 disabled:opacity-50 select-none";
+const buttonBase = "inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md font-medium transition-[background-color,box-shadow,color,opacity,transform] duration-150 active:scale-[0.97] disabled:opacity-50 disabled:active:scale-100 select-none";
 const buttonVariants: Record<ButtonVariant, string> = {
   primary: "bg-primary text-on-primary font-button font-semibold tracking-[-0.015em] shadow-btn hover:bg-primary-hover",
   secondary: "bg-surface text-ink shadow-[0_0_0_1px_var(--line-strong),var(--shadow-btn)] hover:bg-subtle",
@@ -139,13 +141,18 @@ export function Checkbox({ checked, onChange, label, className }: { checked: boo
 
 /** Segmented control in the style of the template's 1D / 7D / 1M filter. */
 export function Segmented<T extends string>({ options, value, onChange, size = "sm", className, ariaLabel }: { options: { value: T; label: ReactNode }[]; value: T; onChange: (v: T) => void; size?: "sm" | "md"; className?: string; ariaLabel?: string }) {
+  const pillId = useId();
   return (
     <div role="radiogroup" aria-label={ariaLabel} className={cx("inline-flex max-w-full items-center gap-0.5 overflow-x-auto rounded-md bg-muted-bg p-0.5 scrollbar-thin", className)}>
       {options.map((o) => (
         <button key={o.value} type="button" role="radio" aria-checked={value === o.value} onClick={() => onChange(o.value)}
-          className={cx("shrink-0 rounded-[6px] font-medium transition-all", size === "sm" ? "h-6 px-2 text-[12px]" : "h-8 px-3 text-[13px]",
-            value === o.value ? "bg-surface text-ink shadow-[0_1px_2px_rgba(0,0,0,0.08),0_0_0_1px_var(--line)]" : "text-muted hover:text-ink")}>
-          {o.label}
+          className={cx("relative shrink-0 rounded-[6px] font-medium transition-colors", size === "sm" ? "h-6 px-2 text-[12px]" : "h-8 px-3 text-[13px]",
+            value === o.value ? "text-ink" : "text-muted hover:text-ink")}>
+          {value === o.value && (
+            <motion.span layoutId={pillId} className="absolute inset-0 rounded-[6px] bg-surface shadow-[0_1px_2px_rgba(0,0,0,0.08),0_0_0_1px_var(--line)]"
+              transition={{ type: "spring", stiffness: 520, damping: 38 }} />
+          )}
+          <span className="relative">{o.label}</span>
         </button>
       ))}
     </div>
@@ -239,12 +246,12 @@ export function Badge({ tone = "neutral", children, className, title }: { tone?:
 /** KPI tile modelled on the template's analytics cards (icon chip, label, value, delta). */
 export function StatCard({ icon, label, value, sub, tone, className, hint }: { icon?: ReactNode; label: string; value: ReactNode; sub?: ReactNode; tone?: "profit" | "loss" | null; className?: string; hint?: string }) {
   return (
-    <Card as="div" className={cx("flex min-w-0 flex-col gap-3 p-4", className)}>
+    <Card as="div" className={cx("flex min-w-0 flex-col gap-3 p-4 transition-shadow duration-300 hover:shadow-[0_0_0_1px_var(--line-strong),var(--shadow-pop)]", className)}>
       {icon && <span className="flex size-8 items-center justify-center rounded-md bg-subtle text-ink-3 shadow-[0_0_0_1px_var(--line)] [&_svg]:size-4">{icon}</span>}
       <div className="min-w-0">
         <p className="truncate text-[13px] text-muted" title={hint}>{label}</p>
         <div className="mt-1 flex items-end justify-between gap-2">
-          <p className={cx("tnum truncate text-[22px] font-medium leading-tight tracking-[-0.03em]", tone === "profit" ? "text-profit" : tone === "loss" ? "text-loss" : "text-ink")}>{value}</p>
+          <p className={cx("tnum truncate text-[22px] font-medium leading-tight tracking-[-0.03em]", tone === "profit" ? "text-profit" : tone === "loss" ? "text-loss" : "text-ink")}>{typeof value === "string" || typeof value === "number" ? <CountUp value={value} /> : value}</p>
           {sub && <div className="tnum shrink-0 text-[12px] text-muted">{sub}</div>}
         </div>
       </div>
@@ -314,8 +321,9 @@ export function Modal({ open, onClose, title, description, children, footer, siz
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-4">
       <div className="absolute inset-0 bg-[var(--overlay)] animate-fade-in" onClick={onClose} aria-hidden />
-      <div ref={ref} role="dialog" aria-modal="true" aria-labelledby={titleId}
-        className={cx("relative flex max-h-[92dvh] w-full flex-col rounded-t-xl bg-raised shadow-pop animate-rise sm:rounded-xl",
+      <motion.div ref={ref} role="dialog" aria-modal="true" aria-labelledby={titleId}
+        initial={{ opacity: 0, y: 24, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ type: "spring", stiffness: 420, damping: 34 }}
+        className={cx("relative flex max-h-[92dvh] w-full flex-col rounded-t-xl bg-raised shadow-pop sm:rounded-xl",
           size === "sm" ? "sm:max-w-md" : size === "lg" ? "sm:max-w-3xl" : size === "xl" ? "sm:max-w-5xl" : "sm:max-w-xl")}>
         <div className="flex items-start justify-between gap-4 border-b border-line px-5 py-4">
           <div>
@@ -326,7 +334,7 @@ export function Modal({ open, onClose, title, description, children, footer, siz
         </div>
         <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4 scrollbar-thin">{children}</div>
         {footer && <div className="flex flex-wrap justify-end gap-2 border-t border-line px-5 py-3 safe-bottom">{footer}</div>}
-      </div>
+      </motion.div>
     </div>,
     document.body,
   );
@@ -394,11 +402,11 @@ export function Toaster() {
   return (
     <div aria-live="polite" className="pointer-events-none fixed inset-x-0 bottom-20 z-[60] flex flex-col items-center gap-2 px-4 lg:bottom-6 lg:items-end lg:pr-6">
       {list.map((t) => (
-        <div key={t.id} role={t.kind === "error" ? "alert" : "status"}
-          className="pointer-events-auto flex max-w-sm items-center gap-2.5 rounded-lg bg-ink-2 px-3.5 py-2.5 text-[13.5px] text-bg shadow-pop animate-rise">
+        <motion.div key={t.id} role={t.kind === "error" ? "alert" : "status"} initial={{ opacity: 0, y: 16, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ type: "spring", stiffness: 500, damping: 32 }}
+          className="pointer-events-auto flex max-w-sm items-center gap-2.5 rounded-lg bg-ink-2 px-3.5 py-2.5 text-[13.5px] text-bg shadow-pop">
           {t.kind === "success" ? <Check className="size-4 text-profit" /> : t.kind === "error" ? <AlertTriangle className="size-4 text-loss" /> : <Info className="size-4 text-primary-light" />}
           <span>{t.message}</span>
-        </div>
+        </motion.div>
       ))}
     </div>
   );
@@ -411,12 +419,14 @@ export function Spinner({ className }: { className?: string }) {
 }
 
 export function Tabs<T extends string>({ tabs, value, onChange, className }: { tabs: { value: T; label: ReactNode; count?: number }[]; value: T; onChange: (v: T) => void; className?: string }) {
+  const lineId = useId();
   return (
     <div role="tablist" className={cx("flex gap-1 overflow-x-auto border-b border-line scrollbar-thin", className)}>
       {tabs.map((t) => (
         <button key={t.value} role="tab" type="button" aria-selected={value === t.value} onClick={() => onChange(t.value)}
-          className={cx("-mb-px flex h-10 shrink-0 items-center gap-1.5 border-b-2 px-2.5 text-[13.5px] font-medium transition-colors",
-            value === t.value ? "border-ink text-ink" : "border-transparent text-muted hover:text-ink")}>
+          className={cx("relative -mb-px flex h-10 shrink-0 items-center gap-1.5 px-2.5 text-[13.5px] font-medium transition-colors",
+            value === t.value ? "text-ink" : "text-muted hover:text-ink")}>
+          {value === t.value && <motion.span layoutId={lineId} className="absolute inset-x-0 bottom-0 h-0.5 rounded-full bg-ink" transition={{ type: "spring", stiffness: 500, damping: 40 }} />}
           {t.label}
           {t.count !== undefined && <span className="tnum rounded-[5px] bg-muted-bg px-1.5 text-[11px] text-muted">{t.count}</span>}
         </button>

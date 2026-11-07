@@ -12,7 +12,7 @@ function rng(seed: number) {
   };
 }
 
-export function PixelMosaic({ cols = 32, rows = 12, seed = 7, className }: { cols?: number; rows?: number; seed?: number; className?: string }) {
+export function PixelMosaic({ cols = 32, rows = 12, seed = 7, className, animated = false }: { cols?: number; rows?: number; seed?: number; className?: string; animated?: boolean }) {
   const r = rng(seed);
   const cells: { x: number; y: number; o: number }[] = [];
   for (let y = 0; y < rows; y++) {
@@ -27,9 +27,14 @@ export function PixelMosaic({ cols = 32, rows = 12, seed = 7, className }: { col
   return (
     <svg className={className} viewBox={`0 0 ${cols} ${rows}`} preserveAspectRatio="xMidYMid slice" aria-hidden>
       <rect width={cols} height={rows} fill="#e9eefc" />
-      {cells.map((c) => (
-        <rect key={`${c.x}-${c.y}`} x={c.x} y={c.y} width={1.002} height={1.002} fill="#124eeb" opacity={c.o.toFixed(3)} />
-      ))}
+      {cells.map((c, i) => {
+        // Every 7th strong pixel gently pulses, like the template's animated mosaic.
+        const tw = animated && c.o > 0.5 && i % 7 === 0;
+        return (
+          <rect key={`${c.x}-${c.y}`} x={c.x} y={c.y} width={1.002} height={1.002} fill="#124eeb" opacity={c.o.toFixed(3)}
+            className={tw ? "twinkle" : undefined} style={tw ? ({ "--o": c.o.toFixed(3), animationDelay: `${(i % 13) * 0.35}s` } as React.CSSProperties) : undefined} />
+        );
+      })}
     </svg>
   );
 }

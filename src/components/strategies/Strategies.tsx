@@ -48,10 +48,10 @@ export function StrategiesPage() {
         <Card><EmptyState icon={<Layers />} title="No strategies yet" description="Write down your setups: entry and exit conditions, risk rules and the markets they're for. Then tag trades with them to see what works." action={<Button variant="primary" onClick={() => setModal("new")}>Create a strategy</Button>} /></Card>
       ) : (
         <>
-          <div className="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <div className="stagger mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {rows.map(({ s, st }) => (
               <Link key={s.id} href={`/app/strategies/${s.id}`} className="group">
-                <Card as="div" className="flex h-full flex-col p-5 transition-shadow group-hover:shadow-[0_0_0_1px_var(--line-strong),var(--shadow-pop)]">
+                <Card as="div" className="lift flex h-full flex-col p-5">
                   <div className="flex items-start justify-between gap-2">
                     <h3 className="text-[15.5px] font-medium tracking-[-0.02em]">{s.name}</h3>
                     <div className="flex gap-1">{isDemoStrategy(s) && <Badge tone="warn">Demo</Badge>}{s.is_archived && <Badge>Archived</Badge>}</div>

@@ -12,7 +12,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <p className="text-[12px] text-faint">Your trading data stays private to your account.</p>
       </div>
       <aside className="relative hidden overflow-hidden border-l border-line bg-subtle lg:block">
-        <PixelMosaic className="absolute inset-0 h-full w-full" cols={24} rows={30} seed={11} />
+        <PixelMosaic className="absolute inset-0 h-full w-full" cols={24} rows={30} seed={11} animated />
         <div className="relative flex h-full flex-col justify-end p-12">
           <div className="max-w-md rounded-xl bg-white/85 p-6 shadow-pop backdrop-blur-sm">
             <p className="text-[13px] font-medium text-primary">Trading journal &amp; portfolio analytics</p>

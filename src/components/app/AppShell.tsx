@@ -7,6 +7,7 @@ import type { User } from "@supabase/supabase-js";
 import {
   Bell, Check, ChevronDown, ChevronsUpDown, FlaskConical, LogOut, Menu as MenuIcon, Moon, Plus, Search, Wallet, X,
 } from "lucide-react";
+import { motion } from "motion/react";
 import { supabase } from "@/lib/supabase/client";
 import { DataProvider, useData } from "@/lib/data/store";
 import { Logo } from "@/components/brand/Logo";
@@ -95,7 +96,7 @@ function Shell({ children }: { children: ReactNode }) {
               <Button className="mt-5" onClick={() => void reload()}>Try again</Button>
             </div>
           ) : !profile?.onboarded_at ? <PageSkeleton /> : (
-            <div key={path} className="animate-fade-in">{children}</div>
+            <div key={path} className="page-enter">{children}</div>
           )}
         </main>
       </div>
@@ -174,10 +175,11 @@ function NavLink({ item, active }: { item: NavItem; active: boolean }) {
   return (
     <li>
       <Link href={item.href} aria-current={active ? "page" : undefined}
-        className={cx("flex h-9 items-center gap-2.5 rounded-lg px-2.5 text-[14px] transition-colors",
-          active ? "bg-muted-bg font-medium text-ink" : "text-ink-3 hover:bg-subtle hover:text-ink")}>
-        <Icon className="size-[17px] shrink-0" strokeWidth={1.5} />
-        {item.label}
+        className={cx("relative flex h-9 items-center gap-2.5 rounded-lg px-2.5 text-[14px] transition-colors",
+          active ? "font-medium text-ink" : "text-ink-3 hover:bg-subtle hover:text-ink")}>
+        {active && <motion.span layoutId="nav-pill" className="absolute inset-0 rounded-lg bg-muted-bg" transition={{ type: "spring", stiffness: 480, damping: 38 }} />}
+        <Icon className="relative size-[17px] shrink-0" strokeWidth={1.5} />
+        <span className="relative">{item.label}</span>
       </Link>
     </li>
   );

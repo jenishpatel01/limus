@@ -55,7 +55,7 @@ export function CalendarPage() {
       <PageHeader title="Calendar" icon={<CalendarDays />} description={`Realised P&L by close day in ${tz.replace(/_/g, " ")}.`}
         actions={<Button icon={<NotebookPen className="size-4" />} onClick={() => setNote("new")}>New note</Button>} />
 
-      <div className="mb-5 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+      <div className="stagger mb-5 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <StatCard label={`Net P&L · ${dayLabel(first, { month: "long", year: "numeric" })}`} value={money(mNet, currency, { sign: true })} tone={mNet > 0 ? "profit" : mNet < 0 ? "loss" : null} />
         <StatCard label="Trades" value={mTrades} sub={<><span className="text-profit">{mWins}W</span> · <span className="text-loss">{mLosses}L</span></>} />
         <StatCard label="Win rate" value={pct(mTrades ? (mWins / mTrades) * 100 : null)} sub={`${green} green · ${red} red days`} />

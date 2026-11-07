@@ -80,7 +80,7 @@ export function AnalyticsPage() {
         <Card><EmptyState icon={<BarChart3 />} title="No closed trades match" description="Analytics are calculated from closed trades. Change the filters or date range, or log some trades." /></Card>
       ) : (
         <>
-          <div className="mb-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-6">
+          <div className="stagger mb-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-6">
             <StatCard label="Net P&L" value={money(stats.netPnl, cur, { sign: true })} tone={pnlTone(stats.netPnl)} sub={`${stats.totalTrades} trades`} />
             <StatCard label="Win rate" value={pct(stats.winRate)} sub={`${stats.wins}W · ${stats.losses}L · ${stats.breakeven}BE`} hint="Winning trades ÷ closed trades" />
             <StatCard label="Profit factor" value={ratio(stats.profitFactor)} hint="Gross profit ÷ gross loss" />

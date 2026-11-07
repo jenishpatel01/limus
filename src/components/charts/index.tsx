@@ -7,6 +7,7 @@ import {
   Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis,
 } from "recharts";
 import type { ReactNode } from "react";
+import { motion } from "motion/react";
 import { money, pct } from "@/lib/format";
 import { cx } from "@/components/ui";
 
@@ -63,7 +64,7 @@ export function EquityChart({ data, currency, height = 260, baseline }: { data: 
             const p = payload[0].payload as CurvePoint;
             return <TooltipBox title={p.sub ?? p.label} rows={[{ label: "Balance", value: money(p.value, currency) }]} />;
           }} />
-          <Area type="monotone" dataKey="value" stroke="var(--primary)" strokeWidth={2} fill="url(#eq-fill)" dot={false} activeDot={{ r: 4, strokeWidth: 2, stroke: "var(--surface)" }} isAnimationActive={false} />
+          <Area type="monotone" dataKey="value" stroke="var(--primary)" strokeWidth={2} fill="url(#eq-fill)" dot={false} activeDot={{ r: 4, strokeWidth: 2, stroke: "var(--surface)" }} isAnimationActive animationDuration={1100} animationEasing="ease-out" />
         </AreaChart>
       </ResponsiveContainer>
     </div>
@@ -86,7 +87,7 @@ export function DrawdownChart({ data, height = 200 }: { data: { label: string; v
             const p = payload[0].payload as { label: string; value: number; sub?: string };
             return <TooltipBox title={p.sub ?? p.label} rows={[{ label: "Below peak", value: pct(p.value, 2) }]} />;
           }} />
-          <Area type="monotone" dataKey="neg" stroke="var(--loss)" strokeWidth={1.5} fill="var(--loss)" fillOpacity={0.1} dot={false} isAnimationActive={false} />
+          <Area type="monotone" dataKey="neg" stroke="var(--loss)" strokeWidth={1.5} fill="var(--loss)" fillOpacity={0.1} dot={false} isAnimationActive animationDuration={1100} animationEasing="ease-out" />
         </AreaChart>
       </ResponsiveContainer>
     </div>
@@ -116,7 +117,7 @@ export function PnlBars({ data, currency, height = 220, valueLabel = "Net P&L", 
               ...(extra ? extra(p) : []),
             ]} />;
           }} />
-          <Bar dataKey="value" radius={[4, 4, 4, 4]} maxBarSize={28} isAnimationActive={false}>
+          <Bar dataKey="value" radius={[4, 4, 4, 4]} maxBarSize={28} isAnimationActive animationDuration={800} animationEasing="ease-out">
             {data.map((d, i) => <Cell key={i} fill={d.value >= 0 ? "var(--profit)" : "var(--loss)"} />)}
           </Bar>
         </BarChart>
@@ -141,10 +142,11 @@ export function RingChart({ items, centerValue, centerLabel, size = 168 }: { ite
             return (
               <g key={r.label} transform={`rotate(-90 ${size / 2} ${size / 2})`}>
                 <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="var(--bg-muted)" strokeWidth={stroke} />
-                <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke={SERIES[i]} strokeWidth={stroke} strokeLinecap="round"
-                  strokeDasharray={`${Math.max(0.001, frac * c - (frac > 0 && frac < 1 ? 2 : 0))} ${c}`}>
+                <motion.circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke={SERIES[i]} strokeWidth={stroke} strokeLinecap="round"
+                  initial={{ strokeDasharray: `0.001 ${c}` }} whileInView={{ strokeDasharray: `${Math.max(0.001, frac * c - (frac > 0 && frac < 1 ? 2 : 0))} ${c}` }}
+                  viewport={{ once: true }} transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], delay: i * 0.08 }}>
                   <title>{`${r.label}: ${r.display ?? r.value} (${(frac * 100).toFixed(1)}%)`}</title>
-                </circle>
+                </motion.circle>
               </g>
             );
           })}
@@ -178,7 +180,8 @@ export function BreakdownBars({ rows, currency }: { rows: { label: string; value
         <li key={r.label} className="grid grid-cols-[minmax(0,120px)_1fr_auto] items-center gap-3 text-[13px]" title={`${r.label}: ${money(r.value, currency)}`}>
           <span className="truncate text-ink-3">{r.label}</span>
           <span className="relative h-2 rounded-full bg-muted-bg">
-            <span className={cx("absolute inset-y-0 left-0 rounded-full", r.value >= 0 ? "bg-profit" : "bg-loss")} style={{ width: `${Math.max(2, (Math.abs(r.value) / max) * 100)}%` }} />
+            <motion.span className={cx("absolute inset-y-0 left-0 rounded-full", r.value >= 0 ? "bg-profit" : "bg-loss")}
+              initial={{ width: 0 }} whileInView={{ width: `${Math.max(2, (Math.abs(r.value) / max) * 100)}%` }} viewport={{ once: true }} transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }} />
           </span>
           <span className={cx("tnum text-right font-medium", r.value >= 0 ? "text-profit" : "text-loss")}>{money(r.value, currency, { sign: true })}{r.sub && <span className="ml-1.5 font-normal text-muted">{r.sub}</span>}</span>
         </li>
