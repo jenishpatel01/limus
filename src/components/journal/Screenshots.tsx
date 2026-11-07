@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ImagePlus, Trash2, X } from "lucide-react";
 import { api } from "@/lib/data/api";
+import { motion } from "motion/react";
 import { useData } from "@/lib/data/store";
 import type { Attachment } from "@/lib/types";
 import { Button, IconButton, Skeleton, cx, toast } from "@/components/ui";
@@ -83,7 +84,7 @@ export function AttachmentManager({ parent, items, readOnly }: { parent: { trade
               {urls[a.storage_path] ? (
                 <button type="button" onClick={() => setView(a)} className="block size-full" aria-label={`View ${a.file_name}`}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={urls[a.storage_path]} alt={a.caption || a.file_name} className="size-full object-cover transition-transform group-hover:scale-[1.02]" />
+                  <img src={urls[a.storage_path]} alt={a.caption || a.file_name} className="size-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.05]" />
                 </button>
               ) : <Skeleton className="size-full" />}
               {!readOnly && (
@@ -137,10 +138,11 @@ export function Lightbox({ src, alt, onClose }: { src: string; alt: string; onCl
     return () => document.removeEventListener("keydown", k);
   }, [onClose]);
   return (
-    <div role="dialog" aria-modal="true" aria-label={alt} className="fixed inset-0 z-[70] flex items-center justify-center bg-black/80 p-4 animate-fade-in" onClick={onClose}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={src} alt={alt} className="max-h-full max-w-full rounded-lg object-contain shadow-pop" onClick={(e) => e.stopPropagation()} />
+    <motion.div role="dialog" aria-modal="true" aria-label={alt} className="fixed inset-0 z-[70] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm" onClick={onClose}
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
+      <motion.img src={src} alt={alt} className="max-h-full max-w-full rounded-lg object-contain shadow-pop" onClick={(e) => e.stopPropagation()}
+        initial={{ opacity: 0, scale: 0.94, y: 12 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ type: "spring", stiffness: 320, damping: 30 }} />
       <IconButton label="Close" onClick={onClose} className="absolute right-4 top-4 bg-white/90 text-ink"><X className="size-4" /></IconButton>
-    </div>
+    </motion.div>
   );
 }

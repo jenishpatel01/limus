@@ -72,7 +72,7 @@ export function CalendarPage() {
           <Button size="sm" onClick={() => { setMonth(today.slice(0, 7)); setSelected(today); }}>Today</Button>
         </div>
         <div className="overflow-x-auto">
-          <div className="min-w-[720px]">
+          <div className="stagger min-w-[720px]">
             <div className="grid grid-cols-[repeat(7,minmax(0,1fr))_minmax(0,0.9fr)] border-b border-line bg-subtle text-[12px] text-muted">
               {WEEKDAYS.map((d) => <div key={d} className="px-3 py-2 font-medium">{d}</div>)}
               <div className="px-3 py-2 text-right font-medium">Week</div>

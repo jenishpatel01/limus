@@ -82,9 +82,9 @@ export function StrategiesPage() {
                 <thead><tr className="border-y border-line bg-subtle text-left text-[12px] text-muted">
                   <th className="px-5 py-2 font-medium">Strategy</th><th className="px-3 py-2 text-right font-medium">Trades</th><th className="px-3 py-2 text-right font-medium">Win rate</th><th className="px-3 py-2 text-right font-medium">Profit factor</th><th className="px-3 py-2 text-right font-medium">Avg R</th><th className="px-3 py-2 text-right font-medium">Expectancy</th><th className="px-5 py-2 text-right font-medium">Net P&amp;L</th>
                 </tr></thead>
-                <tbody>
+                <tbody className="rows-in">
                   {rows.map(({ s, st }) => (
-                    <tr key={s.id} className="border-b border-line last:border-0 hover:bg-subtle">
+                    <tr key={s.id} className="row-hover border-b border-line last:border-0">
                       <td className="px-5 py-2.5"><Link href={`/app/strategies/${s.id}`} className="font-medium hover:underline">{s.name}</Link></td>
                       <td className="tnum px-3 py-2.5 text-right">{st.totalTrades}</td>
                       <td className="tnum px-3 py-2.5 text-right">{pct(st.winRate)}</td>
@@ -174,7 +174,7 @@ export function StrategyDetail() {
         </div>
       </div>
 
-      <div className="mb-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-5">
+      <div className="stagger mb-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-5">
         <StatCard label="Trades" value={st.totalTrades} sub={`${st.wins}W · ${st.losses}L`} />
         <StatCard label="Win rate" value={pct(st.winRate)} />
         <StatCard label="Net P&L" value={money(st.netPnl, currency, { sign: true })} tone={pnlTone(st.netPnl)} />

@@ -49,7 +49,7 @@ export function PortfolioPage() {
           <div className="mb-2 flex items-baseline justify-between">
             <h2 className="text-[15px] font-medium tracking-[-0.02em]">Combined portfolio <span className="font-normal text-muted">· {combined.accounts.length} account{combined.accounts.length === 1 ? "" : "s"} in {base}</span></h2>
           </div>
-          <div className="mb-3 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+          <div className="stagger mb-3 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
             <StatCard label="Balance" value={money(combined.balance, base)} sub={`Equity ${money(combined.equity, base, { compact: true })}`} />
             <StatCard label="Net profit" value={money(combined.netProfit, base, { sign: true })} tone={pnlTone(combined.netProfit)} sub={pct(combined.returnPct, 2, true)} />
             <StatCard label="Realised / unrealised" value={money(combined.realisedPnl, base, { sign: true })} tone={pnlTone(combined.realisedPnl)} sub={<span className={pnlClass(combined.unrealisedPnl)}>{money(combined.unrealisedPnl, base, { sign: true, compact: true })}</span>} />
@@ -121,11 +121,11 @@ function AccountTable({ rows, onEdit, onCash, onDelete, onOpen, onJournal }: {
               <th className="w-12" />
             </tr>
           </thead>
-          <tbody>
+          <tbody className="rows-in">
             {rows.map((s) => {
               const a = s.account;
               return (
-                <tr key={a.id} className="border-b border-line last:border-0 hover:bg-subtle">
+                <tr key={a.id} className="row-hover border-b border-line last:border-0">
                   <td className="px-5 py-3">
                     <Link href={`/app/portfolio/${a.id}`} className="font-medium text-ink hover:underline">{a.name}</Link>
                     <p className="text-[12px] text-muted">{a.broker || "No broker"} · {a.currency}</p>
@@ -199,7 +199,7 @@ export function AccountDetail() {
         </div>
       </div>
 
-      <div className="mb-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+      <div className="stagger mb-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <StatCard label="Current balance" value={money(s.balance, cur)} sub={`Initial ${money(s.initialBalance, cur, { compact: true })}`} />
         <StatCard label="Equity" value={money(s.equity, cur)} sub={<span className={pnlClass(s.unrealisedPnl)}>{money(s.unrealisedPnl, cur, { sign: true, compact: true })} open</span>} />
         <StatCard label="Net profit" value={money(s.netProfit, cur, { sign: true })} tone={pnlTone(s.netProfit)} sub={pct(s.returnPct, 2, true)} />

@@ -138,7 +138,7 @@ export function ReportsPage() {
             <h2 className="text-[20px] font-medium tracking-[-0.03em]">{report.spec.title}</h2>
             <p className="text-[13px] text-muted">{dayLabel(report.spec.from)} – {dayLabel(report.spec.to)} · {report.accountNames.join(", ") || "No accounts"}{report.strategyName ? ` · ${report.strategyName}` : ""}</p>
           </div>
-          <div className="mb-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+          <div className="stagger mb-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
             <StatCard label="Net P&L" value={money(report.stats.netPnl, report.currency, { sign: true })} tone={pnlTone(report.stats.netPnl)} sub={`${report.stats.totalTrades} trades`} />
             <StatCard label="Win rate" value={pct(report.stats.winRate)} sub={`${report.stats.wins}W · ${report.stats.losses}L`} />
             <StatCard label="Profit factor" value={ratio(report.stats.profitFactor)} sub={`Expectancy ${money(report.stats.expectancy, report.currency, { compact: true })}`} />

@@ -88,7 +88,7 @@ export function TradeForm({ trade }: { trade?: Trade }) {
 
   return (
     <form onSubmit={submit} noValidate className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
-      <div className="min-w-0 space-y-5">
+      <div className="stagger min-w-0 space-y-5">
         {error && <Notice tone="loss">{error}</Notice>}
 
         <Section title="Instrument" subtitle="What you traded and in which account.">

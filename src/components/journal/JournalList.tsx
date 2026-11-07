@@ -15,6 +15,7 @@ import {
 } from "@/components/ui";
 import { RangeFilter, useRange } from "@/components/app/RangeFilter";
 import { DailyNotes } from "./DailyNotes";
+import { Collapse } from "@/components/motion";
 
 type SortKey = "date_desc" | "date_asc" | "pnl_desc" | "pnl_asc" | "r_desc" | "symbol";
 const PAGE = 50;
@@ -136,7 +137,7 @@ function TradeList({ initialQuery, focusSearch }: { initialQuery: string; focusS
   return (
     <>
       <div className="mb-4 flex flex-wrap items-center gap-2">
-        <label className="relative min-w-0 flex-1 sm:max-w-sm">
+        <label className="relative min-w-0 basis-full sm:basis-auto sm:flex-1 sm:max-w-sm">
           <span className="sr-only">Search trades</span>
           <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted" />
           <input ref={searchRef} value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search symbol, tag, setup, notes…"
@@ -157,8 +158,8 @@ function TradeList({ initialQuery, focusSearch }: { initialQuery: string; focusS
         <Button icon={<Download className="size-4" />} onClick={() => exportCsv(filtered)} className="ml-auto">Export</Button>
       </div>
 
-      {showFilters && (
-        <Card className="mb-4 p-4 animate-rise">
+      <Collapse open={showFilters}>
+        <Card className="mb-4 p-4">
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
             <Select aria-label="Status" value={status} onChange={(e) => setStatus(e.target.value)}><option value="">Any status</option><option value="closed">Closed</option><option value="open">Open</option><option value="cancelled">Cancelled</option></Select>
             <Select aria-label="Direction" value={direction} onChange={(e) => setDirection(e.target.value)}><option value="">Buy &amp; sell</option><option value="long">Buy / long</option><option value="short">Sell / short</option></Select>
@@ -171,7 +172,7 @@ function TradeList({ initialQuery, focusSearch }: { initialQuery: string; focusS
             {activeFilters > 0 && <Button size="sm" variant="ghost" onClick={resetFilters}>Clear filters</Button>}
           </div>
         </Card>
-      )}
+      </Collapse>
 
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2 text-[13px] text-muted">
         <span><span className="tnum text-ink">{filtered.length}</span> trade{filtered.length === 1 ? "" : "s"} · net <span className={cx("tnum font-medium", pnlClass(filteredNet))}>{money(filteredNet, currency, { sign: true })}</span></span>
@@ -210,12 +211,12 @@ function TradeList({ initialQuery, focusSearch }: { initialQuery: string; focusS
                     <th className="w-12 py-2.5 pr-3" />
                   </tr>
                 </thead>
-                <tbody>
+                <tbody key={`${page}-${filtered.length}`} className="rows-in">
                   {visible.map((t) => {
                     const acc = lookups.account.get(t.account_id);
                     const strat = t.strategy_id ? lookups.strategy.get(t.strategy_id) : null;
                     return (
-                      <tr key={t.id} className={cx("group border-b border-line last:border-0 transition-colors hover:bg-subtle", selected.has(t.id) && "bg-primary-soft/30")}>
+                      <tr key={t.id} className={cx("row-hover group border-b border-line last:border-0", selected.has(t.id) && "bg-primary-soft/30")}>
                         <td className="py-2.5 pl-4"><Checkbox checked={selected.has(t.id)} onChange={(v) => setSelected((s) => { const n = new Set(s); if (v) n.add(t.id); else n.delete(t.id); return n; })} label={<span className="sr-only">Select {t.symbol}</span>} /></td>
                         <td className="whitespace-nowrap px-3 py-2.5 text-muted">{dateTime(t.entry_at, tz)}</td>
                         <td className="px-3 py-2.5">
@@ -240,7 +241,7 @@ function TradeList({ initialQuery, focusSearch }: { initialQuery: string; focusS
           </Card>
 
           {/* Mobile cards */}
-          <ul className="space-y-2 md:hidden">
+          <ul className="stagger space-y-2 md:hidden">
             {visible.map((t) => {
               const acc = lookups.account.get(t.account_id);
               return (

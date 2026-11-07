@@ -251,8 +251,8 @@ export function StatCard({ icon, label, value, sub, tone, className, hint }: { i
       {icon && <span className="flex size-8 items-center justify-center rounded-md bg-subtle text-ink-3 shadow-[0_0_0_1px_var(--line)] [&_svg]:size-4">{icon}</span>}
       <div className="min-w-0">
         <p className="truncate text-[13px] text-muted" title={hint}>{label}</p>
-        <div className="mt-1 flex items-end justify-between gap-2">
-          <p className={cx("tnum truncate text-[22px] font-medium leading-tight tracking-[-0.03em]", tone === "profit" ? "text-profit" : tone === "loss" ? "text-loss" : "text-ink")}>{typeof value === "string" || typeof value === "number" ? <CountUp value={value} /> : value}</p>
+        <div className="mt-1 flex flex-wrap items-end justify-between gap-x-2 gap-y-0.5">
+          <p className={cx("tnum whitespace-nowrap text-[22px] font-medium leading-tight tracking-[-0.03em]", tone === "profit" ? "text-profit" : tone === "loss" ? "text-loss" : "text-ink")}>{typeof value === "string" || typeof value === "number" ? <CountUp value={value} /> : value}</p>
           {sub && <div className="tnum shrink-0 text-[12px] text-muted">{sub}</div>}
         </div>
       </div>

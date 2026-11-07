@@ -80,7 +80,7 @@ export function AnalyticsPage() {
         <Card><EmptyState icon={<BarChart3 />} title="No closed trades match" description="Analytics are calculated from closed trades. Change the filters or date range, or log some trades." /></Card>
       ) : (
         <>
-          <div className="stagger mb-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-6">
+          <div className="stagger mb-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4 2xl:grid-cols-6">
             <StatCard label="Net P&L" value={money(stats.netPnl, cur, { sign: true })} tone={pnlTone(stats.netPnl)} sub={`${stats.totalTrades} trades`} />
             <StatCard label="Win rate" value={pct(stats.winRate)} sub={`${stats.wins}W · ${stats.losses}L · ${stats.breakeven}BE`} hint="Winning trades ÷ closed trades" />
             <StatCard label="Profit factor" value={ratio(stats.profitFactor)} hint="Gross profit ÷ gross loss" />
@@ -163,9 +163,9 @@ export function BreakdownCard({ title, subtitle, rows, currency }: { title: stri
       <div className="mt-2 overflow-x-auto">
         <table className="w-full min-w-[480px] text-[12.5px]">
           <thead><tr className="border-y border-line bg-subtle text-left text-muted"><th className="px-5 py-2 font-medium">Name</th><th className="px-2 py-2 text-right font-medium">Trades</th><th className="px-2 py-2 text-right font-medium">Win rate</th><th className="px-2 py-2 text-right font-medium">PF</th><th className="px-2 py-2 text-right font-medium">Avg R</th><th className="px-5 py-2 text-right font-medium">Net P&amp;L</th></tr></thead>
-          <tbody>
+          <tbody className="rows-in">
             {rows.map((r) => (
-              <tr key={r.key} className="border-b border-line last:border-0">
+              <tr key={r.key} className="row-hover border-b border-line last:border-0">
                 <td className="max-w-[180px] truncate px-5 py-2">{r.label}</td>
                 <td className="tnum px-2 py-2 text-right">{r.trades}</td>
                 <td className="tnum px-2 py-2 text-right">{pct(r.winRate)}</td>
@@ -216,8 +216,8 @@ export function Heatmap({ monthly, currency }: { monthly: Map<string, { pnl: num
                 const a = b ? 0.12 + (Math.abs(b.pnl) / max) * 0.6 : 0;
                 return (
                   <td key={m} title={b ? `${m} ${y}: ${money(b.pnl, currency)} · ${b.trades} trades` : `${m} ${y}: no trades`}
-                    className="tnum h-11 rounded-md px-1 text-center"
-                    style={{ background: b ? `color-mix(in oklab, ${b.pnl >= 0 ? "var(--profit)" : "var(--loss)"} ${Math.round(a * 100)}%, var(--surface))` : "var(--bg-subtle)" }}>
+                    className="heat-cell tnum h-11 cursor-default rounded-md px-1 text-center"
+                    style={{ animationDelay: `${i * 0.04}s`, background: b ? `color-mix(in oklab, ${b.pnl >= 0 ? "var(--profit)" : "var(--loss)"} ${Math.round(a * 100)}%, var(--surface))` : "var(--bg-subtle)" }}>
                     {b ? <span className="font-medium text-ink">{money(b.pnl, currency, { compact: true })}</span> : <span className="text-faint">·</span>}
                   </td>
                 );

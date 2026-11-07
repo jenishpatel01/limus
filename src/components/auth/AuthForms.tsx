@@ -60,7 +60,7 @@ export function LoginForm() {
   return (
     <>
       <Heading title="Welcome back" sub={<>New to Limus? <Link href="/register" className="text-primary-text hover:underline">Create an account</Link></>} />
-      <form onSubmit={submit} className="flex flex-col gap-4" noValidate>
+      <form onSubmit={submit} className="stagger flex flex-col gap-4" noValidate>
         {params.get("reset") === "1" && <Notice>Your password was updated. Sign in with your new password.</Notice>}
         {error && (
           <Notice tone="loss">
@@ -127,7 +127,7 @@ export function RegisterForm() {
   return (
     <>
       <Heading title="Create your account" sub={<>Already have one? <Link href="/login" className="text-primary-text hover:underline">Sign in</Link></>} />
-      <form onSubmit={submit} className="flex flex-col gap-4" noValidate>
+      <form onSubmit={submit} className="stagger flex flex-col gap-4" noValidate>
         {error && <Notice tone="loss">{error}</Notice>}
         <Field label="Name" htmlFor="name" optional>
           <Input id="name" autoComplete="name" value={name} maxLength={80} onChange={(e) => setName(e.target.value)} placeholder="Alex Morgan" />
@@ -166,7 +166,7 @@ export function ForgotForm() {
       {sent ? (
         <Notice>If an account exists for <strong className="font-medium text-ink">{email}</strong>, a reset link is on its way. The link expires in one hour.</Notice>
       ) : (
-        <form onSubmit={submit} className="flex flex-col gap-4" noValidate>
+        <form onSubmit={submit} className="stagger flex flex-col gap-4" noValidate>
           {error && <Notice tone="loss">{error}</Notice>}
           <Field label="Email" htmlFor="email">
             <Input id="email" type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
@@ -216,7 +216,7 @@ export function ResetForm() {
   return (
     <>
       <Heading title="Choose a new password" sub="Use at least 8 characters." />
-      <form onSubmit={submit} className="flex flex-col gap-4" noValidate>
+      <form onSubmit={submit} className="stagger flex flex-col gap-4" noValidate>
         {error && <Notice tone="loss">{error}</Notice>}
         <Field label="New password" htmlFor="password">
           <Input id="password" type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} />

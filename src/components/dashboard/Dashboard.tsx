@@ -16,6 +16,7 @@ import { calcTrade } from "@/lib/engine/pnl";
 import { Badge, ButtonLink, Card, CardHeader, EmptyState, StatCard, cx } from "@/components/ui";
 import { EquityChart, PnlBars, RingChart } from "@/components/charts";
 import { RangeFilter, useRange } from "@/components/app/RangeFilter";
+import { CountUp } from "@/components/motion";
 import { isDemoStrategy } from "@/lib/demo/seed";
 
 export function Dashboard() {
@@ -118,9 +119,11 @@ export function Dashboard() {
       {/* Portfolio summary */}
       <Card className="mb-6 overflow-hidden">
         <div className="grid gap-0 lg:grid-cols-[minmax(0,320px)_1fr]">
-          <div className="border-b border-line p-5 lg:border-b-0 lg:border-r">
+          <div className="relative overflow-hidden border-b border-line p-5 lg:border-b-0 lg:border-r">
+            <div aria-hidden className="pointer-events-none absolute -left-16 -top-24 size-64 rounded-full bg-primary-soft/60 blur-3xl" />
+            <div className="relative">
             <p className="text-[13px] text-muted">Total portfolio balance</p>
-            <p className="tnum mt-1 text-[34px] font-medium leading-none tracking-[-0.04em]">{money(portfolio.balance, currency)}</p>
+            <p className="tnum mt-1 text-[34px] font-medium leading-none tracking-[-0.04em]"><CountUp value={money(portfolio.balance, currency)} duration={1.4} /></p>
             <p className={cx("tnum mt-2 flex items-center gap-1 text-[13px]", pnlClass(portfolio.netProfit))}>
               {portfolio.netProfit >= 0 ? <ArrowUpRight className="size-4" /> : <ArrowDownRight className="size-4" />}
               {money(portfolio.netProfit, currency, { sign: true })} <span className="text-muted">({pct(portfolio.returnPct, 2, true)} all-time)</span>
@@ -133,6 +136,7 @@ export function Dashboard() {
               <Metric label="Net deposits" value={money(portfolio.deposits - portfolio.withdrawals, currency)} />
               <Metric label="Total return" value={pct(portfolio.returnPct, 2, true)} tone={pnlTone(portfolio.returnPct)} />
             </dl>
+            </div>
           </div>
           <div className="min-w-0 p-5">
             <div className="mb-3 flex items-center justify-between">
@@ -222,9 +226,9 @@ export function Dashboard() {
                 <thead><tr className="border-y border-line bg-subtle text-left text-[12px] text-muted">
                   <th className="px-5 py-2 font-medium">Symbol</th><th className="px-3 py-2 font-medium">Side</th><th className="px-3 py-2 font-medium">Status</th><th className="px-3 py-2 font-medium">Date</th><th className="px-5 py-2 text-right font-medium">Net P&L</th>
                 </tr></thead>
-                <tbody>
+                <tbody className="rows-in">
                   {recent.map((t) => (
-                    <tr key={t.id} className="border-b border-line last:border-0 hover:bg-subtle">
+                    <tr key={t.id} className="row-hover border-b border-line last:border-0">
                       <td className="px-5 py-2.5"><Link href={`/app/journal/${t.id}`} className="font-medium hover:underline">{t.symbol}</Link></td>
                       <td className="px-3 py-2.5"><Badge tone={t.direction === "long" ? "profit" : "loss"}>{t.direction === "long" ? "Buy" : "Sell"}</Badge></td>
                       <td className="px-3 py-2.5 capitalize text-muted">{t.status}</td>
@@ -301,7 +305,7 @@ function Metric({ label, value, tone }: { label: string; value: string; tone?: "
   return (
     <div className="min-w-0">
       <dt className="truncate text-[12px] text-muted">{label}</dt>
-      <dd className={cx("tnum mt-0.5 truncate text-[14px] font-medium", tone === "profit" ? "text-profit" : tone === "loss" ? "text-loss" : "text-ink")}>{value}</dd>
+      <dd className={cx("tnum mt-0.5 truncate text-[14px] font-medium transition-colors", tone === "profit" ? "text-profit" : tone === "loss" ? "text-loss" : "text-ink")}>{value}</dd>
     </div>
   );
 }

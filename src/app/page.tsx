@@ -5,7 +5,7 @@ import {
 } from "lucide-react";
 import { Logo, LogoMark } from "@/components/brand/Logo";
 import { PixelMosaic } from "@/components/brand/PixelMosaic";
-import { CountUp, FadeIn, Parallax, Reveal, ScrollLitText, Stagger, Words } from "@/components/motion";
+import { ClipReveal, CountUp, Divider, FadeIn, MaskText, Parallax, Reveal, ScrollLitText, ScrollProgress, Stagger, Tilt, Words } from "@/components/motion";
 
 export const metadata: Metadata = {
   title: "Limus — Turn your trades into decisions",
@@ -18,11 +18,13 @@ const btnSecondary = "inline-flex h-10 items-center gap-1.5 rounded-md bg-white 
 export default function Home() {
   return (
     <div className="bg-white text-black" data-theme="light">
+      <ScrollProgress />
       <Nav />
       <main>
         <Hero />
         <Markets />
         <HowItWorks />
+        <div className="mx-auto max-w-[1400px] px-4 pb-16 sm:px-8 lg:px-[52px]"><Divider /></div>
         <ProductPreview />
         <Statement />
         <SpeedSection />
@@ -59,7 +61,8 @@ function Nav() {
 function Hero() {
   return (
     <section className="relative overflow-hidden">
-      <div className="mx-auto grid max-w-[1400px] items-center gap-12 px-4 pb-20 pt-14 sm:px-8 lg:grid-cols-[minmax(0,560px)_1fr] lg:px-[52px] lg:pb-28 lg:pt-24">
+      <div aria-hidden className="float-slower pointer-events-none absolute right-[8%] top-24 size-[420px] rounded-full bg-[#dae2f7] opacity-60 blur-[110px]" />
+      <div className="relative mx-auto grid max-w-[1400px] items-center gap-12 px-4 pb-20 pt-14 sm:px-8 lg:grid-cols-[minmax(0,560px)_1fr] lg:px-[52px] lg:pb-28 lg:pt-24">
         <div className="relative z-10">
           <FadeIn><a href="#features" className="inline-flex items-center overflow-hidden rounded-md text-[12px] shadow-[0_0_0_1px_#e5e7eb] transition-shadow hover:shadow-[0_0_0_1px_#d1d5db]">
             <span className="bg-white px-2.5 py-1.5 font-medium">Journal · Portfolio · Analytics</span>
@@ -75,7 +78,7 @@ function Hero() {
             <p className="mt-4 flex items-center gap-1.5 text-[12.5px] font-medium text-[#124eeb]"><span className="live-dot size-1.5 rounded-full bg-[#124eeb]" />Free to use · No credit card · Explore with a demo account</p>
           </FadeIn>
         </div>
-        <FadeIn delay={0.35} y={30}><HeroCollage /></FadeIn>
+        <FadeIn delay={0.35} y={30}><Tilt max={5}><HeroCollage /></Tilt></FadeIn>
       </div>
     </section>
   );
@@ -123,7 +126,9 @@ function SectionHead({ eyebrow, title, sub, center = true }: { eyebrow: string; 
   return (
     <div className={center ? "mx-auto max-w-2xl text-center" : "max-w-xl"}>
       <p className="text-[14px] font-medium text-[#124eeb]">{eyebrow}</p>
-      <h2 className="mt-3 text-[34px] font-medium leading-[1.08] tracking-[-0.04em] sm:text-[44px]">{title}</h2>
+      {typeof title === "string"
+        ? <MaskText lines={[title]} className="mt-3 text-[34px] font-medium leading-[1.08] tracking-[-0.04em] sm:text-[44px]" />
+        : <h2 className="mt-3 text-[34px] font-medium leading-[1.08] tracking-[-0.04em] sm:text-[44px]">{title}</h2>}
       {sub && <p className="mt-4 text-[16px] font-medium leading-[1.5] tracking-[-0.02em] text-[#616161]">{sub}</p>}
     </div>
   );
@@ -173,7 +178,7 @@ function ProductPreview() {
   return (
     <section className="pb-24 lg:pb-32">
       <div className="mx-auto max-w-[1400px] px-4 sm:px-8 lg:px-[52px]">
-        <Reveal y={48} amount={0.15}><div className="overflow-hidden rounded-2xl bg-white shadow-[0_0_0_1px_#e5e7eb,0_10px_26px_-4.5px_rgba(0,0,0,0.06)]">
+        <ClipReveal><div className="overflow-hidden rounded-2xl bg-white shadow-[0_0_0_1px_#e5e7eb,0_10px_26px_-4.5px_rgba(0,0,0,0.06)]">
           <div className="grid lg:grid-cols-[230px_1fr]">
             <aside className="hidden border-r border-[#e5e7eb] p-4 lg:block">
               <div className="flex items-center gap-2.5 rounded-lg px-2 py-2"><span className="flex size-8 items-center justify-center rounded-full bg-[#0c2442] text-[12px] text-white">AM</span><span><span className="block text-[13px] font-medium">Alex Morgan</span><span className="block text-[11.5px] text-[#7a7a7a]">Sample account</span></span></div>
@@ -201,7 +206,7 @@ function ProductPreview() {
               <p className="mt-3 text-[11.5px] text-[#adadad]">Illustration with sample numbers.</p>
             </div>
           </div>
-        </div></Reveal>
+        </div></ClipReveal>
       </div>
     </section>
   );
@@ -331,7 +336,7 @@ function Faq() {
     <section id="faq" className="scroll-mt-20 border-t border-[#e5e7eb] py-24 lg:py-32">
       <div className="mx-auto grid max-w-[1400px] gap-12 px-4 sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:px-[52px]">
         <Reveal>
-          <h2 className="text-[34px] font-medium leading-[1.08] tracking-[-0.04em] sm:text-[44px]">Frequently<br />asked questions.</h2>
+          <MaskText lines={["Frequently", "asked questions."]} className="text-[34px] font-medium leading-[1.08] tracking-[-0.04em] sm:text-[44px]" />
           <p className="mt-5 text-[16px] font-medium text-[#616161]">Have another question?</p>
           <Link href="/register" className="mt-2 inline-flex items-center gap-1 text-[14px] font-medium">Try it with the demo account <ArrowRight className="size-3.5" /></Link>
         </Reveal>
@@ -353,7 +358,7 @@ function Cta() {
     <section className="relative overflow-hidden">
       <PixelMosaic className="absolute inset-0 h-full w-full" cols={40} rows={12} animated />
       <div className="relative mx-auto flex max-w-[1400px] flex-col items-center px-4 py-28 text-center sm:py-36">
-        <Reveal><h2 className="text-[34px] font-medium leading-[1.08] tracking-[-0.04em] sm:text-[48px]">Ready to trade<br />with more clarity?</h2></Reveal>
+        <MaskText lines={["Ready to trade", "with more clarity?"]} className="text-[34px] font-medium leading-[1.08] tracking-[-0.04em] sm:text-[48px]" />
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link href="/register" className={btnPrimary}>Start for free</Link>
           <a href="#features" className={btnSecondary}>See features</a>

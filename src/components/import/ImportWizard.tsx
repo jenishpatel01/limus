@@ -187,9 +187,9 @@ export function ImportPage() {
                 <th className="px-5 py-2 font-medium">Row</th><th className="px-3 py-2 font-medium">Status</th><th className="px-3 py-2 font-medium">Symbol</th><th className="px-3 py-2 font-medium">Side</th>
                 <th className="px-3 py-2 font-medium">Entry</th><th className="px-3 py-2 text-right font-medium">Size</th><th className="px-3 py-2 text-right font-medium">Entry px</th><th className="px-3 py-2 text-right font-medium">Exit px</th><th className="px-5 py-2 font-medium">Notes</th>
               </tr></thead>
-              <tbody>
+              <tbody className="rows-in">
                 {shown.map((r) => (
-                  <tr key={r.index} className="border-b border-line last:border-0 align-top">
+                  <tr key={r.index} className="row-hover border-b border-line last:border-0 align-top">
                     <td className="px-5 py-2 text-muted">{r.index + 2}</td>
                     <td className="px-3 py-2">{r.status === "ok" ? <Badge tone="profit"><CheckCircle2 className="size-3" />Ready</Badge> : r.status === "duplicate" ? <Badge tone="warn">Duplicate</Badge> : <Badge tone="loss"><XCircle className="size-3" />Error</Badge>}</td>
                     <td className="px-3 py-2 font-medium">{r.trade?.symbol ?? rows[r.index]?.[mapping.symbol ?? ""] ?? "—"}</td>

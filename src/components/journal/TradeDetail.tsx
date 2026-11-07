@@ -107,7 +107,7 @@ export function TradeDetail() {
         </div>
       </div>
 
-      <div className="mb-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+      <div className="stagger mb-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <Kpi label={trade.status === "open" ? "Unrealised P&L" : "Net P&L"} value={money(headline, cur, { sign: true })} className={pnlClass(headline)} />
         <Kpi label="R multiple" value={rMult(trade.r_multiple)} className={pnlClass(trade.r_multiple)} />
         <Kpi label="Risk" value={money(trade.risk_amount, cur)} sub={trade.risk_pct !== null ? `${pct(trade.risk_pct, 2)} of balance` : undefined} />
@@ -115,7 +115,7 @@ export function TradeDetail() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
-        <div className="min-w-0 space-y-4">
+        <div className="stagger min-w-0 space-y-4">
           <Card>
             <CardHeader title="Execution" />
             <dl className="grid grid-cols-2 gap-x-6 gap-y-4 p-5 text-[13px] sm:grid-cols-3">
@@ -166,7 +166,7 @@ export function TradeDetail() {
           </Card>
         </div>
 
-        <div className="space-y-4">
+        <div className="stagger space-y-4">
           <Card className="p-5">
             <h3 className="text-[15px] font-medium tracking-[-0.02em]">P&amp;L breakdown</h3>
             <dl className="mt-4 space-y-2.5 text-[13px]">
