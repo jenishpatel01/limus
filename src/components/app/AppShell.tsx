@@ -7,7 +7,9 @@ import type { User } from "@supabase/supabase-js";
 import {
   Bell, Check, ChevronDown, ChevronsUpDown, FlaskConical, LogOut, Menu as MenuIcon, Moon, Plus, Search, Wallet, X,
 } from "lucide-react";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
+import { PageTransition } from "@/components/motion";
+import { EASE } from "@/components/motion/variants";
 import { supabase } from "@/lib/supabase/client";
 import { DataProvider, useData } from "@/lib/data/store";
 import { Logo } from "@/components/brand/Logo";
@@ -76,19 +78,23 @@ function Shell({ children }: { children: ReactNode }) {
         <SidebarContent />
       </aside>
 
-      {mobileOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden">
-          <div className="absolute inset-0 bg-[var(--overlay)] animate-fade-in" onClick={() => setMobileOpen(false)} />
-          <aside className="absolute inset-y-0 left-0 flex w-[280px] max-w-[85vw] flex-col bg-surface shadow-pop animate-rise">
-            <div className="flex justify-end px-3 pt-3"><IconButton label="Close menu" onClick={() => setMobileOpen(false)}><X className="size-4" /></IconButton></div>
-            <SidebarContent />
-          </aside>
-        </div>
-      )}
+      <AnimatePresence>
+        {mobileOpen && (
+          <div className="fixed inset-0 z-50 lg:hidden">
+            <motion.div className="absolute inset-0 bg-[var(--overlay)]" onClick={() => setMobileOpen(false)} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} />
+            <motion.aside className="absolute inset-y-0 left-0 flex w-[280px] max-w-[85vw] flex-col bg-surface shadow-pop"
+              initial={{ x: "-100%" }} animate={{ x: 0 }} exit={{ x: "-100%" }} transition={{ duration: 0.32, ease: EASE }}>
+              <div className="flex justify-end px-3 pt-3"><IconButton label="Close menu" onClick={() => setMobileOpen(false)}><X className="size-4" /></IconButton></div>
+              <SidebarContent />
+            </motion.aside>
+          </div>
+        )}
+      </AnimatePresence>
 
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="relative flex min-w-0 flex-1 flex-col">
+        <div aria-hidden className="app-ambient" />
         <Topbar onMenu={() => setMobileOpen(true)} />
-        <main className="mx-auto w-full max-w-[1400px] flex-1 px-4 pb-28 pt-5 sm:px-6 lg:px-8 lg:pb-12 lg:pt-7">
+        <main className="relative z-[1] mx-auto w-full max-w-[1400px] flex-1 px-4 pb-28 pt-5 sm:px-6 lg:px-8 lg:pb-12 lg:pt-7">
           {!ready ? <PageSkeleton /> : error ? (
             <div className="mx-auto max-w-md py-20 text-center">
               <p className="text-[15px] font-medium">We couldn&apos;t load your data</p>
@@ -96,7 +102,7 @@ function Shell({ children }: { children: ReactNode }) {
               <Button className="mt-5" onClick={() => void reload()}>Try again</Button>
             </div>
           ) : !profile?.onboarded_at ? <PageSkeleton /> : (
-            <div key={path} className="page-enter">{children}</div>
+            <PageTransition routeKey={path}>{children}</PageTransition>
           )}
         </main>
       </div>
@@ -175,10 +181,10 @@ function NavLink({ item, active }: { item: NavItem; active: boolean }) {
   return (
     <li>
       <Link href={item.href} aria-current={active ? "page" : undefined}
-        className={cx("relative flex h-9 items-center gap-2.5 rounded-lg px-2.5 text-[14px] transition-colors",
+        className={cx("group relative flex h-9 items-center gap-2.5 rounded-lg px-2.5 text-[14px] transition-colors",
           active ? "font-medium text-ink" : "text-ink-3 hover:bg-subtle hover:text-ink")}>
         {active && <motion.span layoutId="nav-pill" className="absolute inset-0 rounded-lg bg-muted-bg" transition={{ type: "spring", stiffness: 480, damping: 38 }} />}
-        <Icon className="relative size-[17px] shrink-0" strokeWidth={1.5} />
+        <Icon className="relative size-[17px] shrink-0 transition-transform duration-200 group-hover:scale-110" strokeWidth={1.5} />
         <span className="relative">{item.label}</span>
       </Link>
     </li>
@@ -242,7 +248,7 @@ function Topbar({ onMenu }: { onMenu: () => void }) {
   const [q, setQ] = useState("");
   const { scope } = useData();
   return (
-    <header className="sticky top-0 z-30 border-b border-line bg-bg/90 backdrop-blur-md">
+    <header className="sticky top-0 z-30 border-b border-line bg-bg/75 backdrop-blur-xl backdrop-saturate-150">
       {scope.kind === "demo" && (
         <div className="flex items-center justify-center gap-2 bg-warn-soft px-4 py-1.5 text-[12.5px] text-ink-3">
           <FlaskConical className="size-3.5 text-warn" />You&apos;re viewing the demo account. Its sample trades are never mixed with your real accounts.
@@ -278,7 +284,7 @@ function Notifications() {
     <Menu className="w-80" trigger={({ toggle, open }) => (
       <IconButton label={unread.length ? `Notifications (${unread.length} unread)` : "Notifications"} onClick={toggle} aria-expanded={open} className="relative">
         <Bell className="size-[18px]" strokeWidth={1.5} />
-        {unread.length > 0 && <span className="absolute right-2 top-2 size-2 rounded-full bg-primary ring-2 ring-bg" />}
+        {unread.length > 0 && <span className="ping absolute right-2 top-2 size-2 rounded-full bg-primary ring-2 ring-bg" />}
       </IconButton>
     )}>
       {(close) => (
@@ -316,11 +322,12 @@ function MobileTabs({ onMore }: { onMore: () => void }) {
       <ul className="mx-auto grid h-16 max-w-md grid-cols-5 items-center">
         {tabs.map((t, i) => t === null ? (
           <li key="add" className="flex justify-center">
-            <Link href="/app/journal/new" aria-label="Add trade" className="flex size-11 items-center justify-center rounded-full bg-primary text-white shadow-btn"><Plus className="size-5" /></Link>
+            <Link href="/app/journal/new" aria-label="Add trade" className="flex size-11 items-center justify-center rounded-full bg-primary text-white shadow-[0_6px_20px_-6px_var(--primary)] transition-transform active:scale-90"><Plus className="size-5" /></Link>
           </li>
         ) : (
           <li key={t.href}>
-            <Link href={t.href} aria-current={isActive(t, path) ? "page" : undefined} className={cx("flex flex-col items-center gap-1 text-[10.5px]", isActive(t, path) ? "text-ink" : "text-muted")}>
+            <Link href={t.href} aria-current={isActive(t, path) ? "page" : undefined} className={cx("relative flex flex-col items-center gap-1 pt-1 text-[10.5px] transition-colors", isActive(t, path) ? "text-ink" : "text-muted")}>
+              {isActive(t, path) && <motion.span layoutId="tab-dot" className="absolute -top-1.5 h-0.5 w-6 rounded-full bg-primary" transition={{ type: "spring", stiffness: 500, damping: 36 }} />}
               <t.icon className="size-5" strokeWidth={1.5} />{i === 1 ? "Journal" : t.label}
             </Link>
           </li>

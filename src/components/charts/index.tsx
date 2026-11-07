@@ -6,16 +6,31 @@
 import {
   Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis,
 } from "recharts";
-import type { ReactNode } from "react";
-import { motion } from "motion/react";
+import { useId, useRef, type ReactNode } from "react";
+import { motion, useInView } from "motion/react";
+import { useMotionPrefs } from "@/components/motion/variants";
 import { money, pct } from "@/lib/format";
 import { cx } from "@/components/ui";
 
 export const SERIES = ["var(--series-1)", "var(--series-2)", "var(--series-3)", "var(--series-4)", "var(--series-5)"];
 
+/**
+ * Mounts a chart only once it scrolls into view, so its draw animation is seen
+ * and off-screen charts cost nothing. Reserves the height to avoid layout shift.
+ */
+function LazyChart({ height, label, children }: { height: number; label: string; children: () => ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "0px 0px -8% 0px" });
+  return (
+    <div ref={ref} style={{ height }} role="img" aria-label={label} className="relative">
+      {inView ? children() : <div className="skeleton absolute inset-0 opacity-50" />}
+    </div>
+  );
+}
+
 function TooltipBox({ title, rows }: { title: ReactNode; rows: { label: string; value: ReactNode; color?: string }[] }) {
   return (
-    <div className="min-w-36 rounded-lg bg-raised px-3 py-2 text-[12px] shadow-[0_0_0_1px_var(--line),var(--shadow-pop)]">
+    <div className="min-w-36 rounded-lg bg-raised/95 px-3 py-2 text-[12px] shadow-[0_0_0_1px_var(--line),var(--shadow-pop)] backdrop-blur-sm animate-fade-in">
       <p className="mb-1 font-medium text-ink">{title}</p>
       {rows.map((r) => (
         <p key={r.label} className="flex items-center justify-between gap-4 text-muted">
@@ -41,18 +56,25 @@ export interface CurvePoint { label: string; value: number; sub?: string }
 
 /** Equity / balance curve. Single series, so the card title names it (no legend). */
 export function EquityChart({ data, currency, height = 260, baseline }: { data: CurvePoint[]; currency: string; height?: number; baseline?: number }) {
+  const gid = useId().replace(/:/g, "");
+  const { reduce } = useMotionPrefs();
   if (data.length < 2) return <ChartEmpty height={height}>Not enough closed trades to draw a curve yet</ChartEmpty>;
   const values = data.map((d) => d.value);
   const min = Math.min(...values, baseline ?? Infinity), max = Math.max(...values, baseline ?? -Infinity);
   const pad = (max - min) * 0.08 || Math.abs(max) * 0.02 || 1;
   return (
-    <div style={{ height }} role="img" aria-label={`Equity curve from ${money(data[0].value, currency)} to ${money(data.at(-1)!.value, currency)}`}>
+    <LazyChart height={height} label={`Equity curve from ${money(data[0].value, currency)} to ${money(data.at(-1)!.value, currency)}`}>{() => (
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
           <defs>
-            <linearGradient id="eq-fill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="var(--primary)" stopOpacity={0.12} />
+            <linearGradient id={`eq-fill-${gid}`} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="var(--primary)" stopOpacity={0.16} />
+              <stop offset="70%" stopColor="var(--primary)" stopOpacity={0.03} />
               <stop offset="100%" stopColor="var(--primary)" stopOpacity={0} />
+            </linearGradient>
+            <linearGradient id={`eq-stroke-${gid}`} x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="var(--primary-light)" />
+              <stop offset="100%" stopColor="var(--primary)" />
             </linearGradient>
           </defs>
           <CartesianGrid vertical={false} stroke="var(--line)" strokeDasharray="3 4" />
@@ -64,19 +86,22 @@ export function EquityChart({ data, currency, height = 260, baseline }: { data: 
             const p = payload[0].payload as CurvePoint;
             return <TooltipBox title={p.sub ?? p.label} rows={[{ label: "Balance", value: money(p.value, currency) }]} />;
           }} />
-          <Area type="monotone" dataKey="value" stroke="var(--primary)" strokeWidth={2} fill="url(#eq-fill)" dot={false} activeDot={{ r: 4, strokeWidth: 2, stroke: "var(--surface)" }} isAnimationActive animationDuration={1100} animationEasing="ease-out" />
+          <Area type="monotone" dataKey="value" stroke={`url(#eq-stroke-${gid})`} strokeWidth={2} fill={`url(#eq-fill-${gid})`} dot={false}
+            activeDot={{ r: 5, strokeWidth: 3, stroke: "var(--surface)", fill: "var(--primary)", style: { filter: "drop-shadow(0 0 6px color-mix(in oklab, var(--primary) 45%, transparent))" } }}
+            isAnimationActive={!reduce} animationDuration={1400} animationEasing="ease-out" />
         </AreaChart>
       </ResponsiveContainer>
-    </div>
+    )}</LazyChart>
   );
 }
 
 /** Drawdown (% below peak), drawn downward from zero. */
 export function DrawdownChart({ data, height = 200 }: { data: { label: string; value: number; sub?: string }[]; height?: number }) {
+  const { reduce } = useMotionPrefs();
   if (data.length < 2) return <ChartEmpty height={height}>Not enough data</ChartEmpty>;
   const neg = data.map((d) => ({ ...d, neg: -d.value }));
   return (
-    <div style={{ height }} role="img" aria-label={`Drawdown chart, deepest ${pct(Math.max(...data.map((d) => d.value)), 2)}`}>
+    <LazyChart height={height} label={`Drawdown chart, deepest ${pct(Math.max(...data.map((d) => d.value)), 2)}`}>{() => (
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={neg} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
           <CartesianGrid vertical={false} stroke="var(--line)" strokeDasharray="3 4" />
@@ -87,10 +112,10 @@ export function DrawdownChart({ data, height = 200 }: { data: { label: string; v
             const p = payload[0].payload as { label: string; value: number; sub?: string };
             return <TooltipBox title={p.sub ?? p.label} rows={[{ label: "Below peak", value: pct(p.value, 2) }]} />;
           }} />
-          <Area type="monotone" dataKey="neg" stroke="var(--loss)" strokeWidth={1.5} fill="var(--loss)" fillOpacity={0.1} dot={false} isAnimationActive animationDuration={1100} animationEasing="ease-out" />
+          <Area type="monotone" dataKey="neg" stroke="var(--loss)" strokeWidth={1.5} fill="var(--loss)" fillOpacity={0.1} dot={false} activeDot={{ r: 4, strokeWidth: 2, stroke: "var(--surface)", fill: "var(--loss)" }} isAnimationActive={!reduce} animationDuration={1200} animationEasing="ease-out" />
         </AreaChart>
       </ResponsiveContainer>
-    </div>
+    )}</LazyChart>
   );
 }
 
@@ -99,9 +124,10 @@ export function PnlBars({ data, currency, height = 220, valueLabel = "Net P&L", 
   data: { label: string; value: number; sub?: string; trades?: number }[];
   currency: string; height?: number; valueLabel?: string; extra?: (d: { trades?: number }) => { label: string; value: ReactNode }[];
 }) {
+  const { reduce } = useMotionPrefs();
   if (!data.length || data.every((d) => d.value === 0 && !d.trades)) return <ChartEmpty height={height} />;
   return (
-    <div style={{ height }} role="img" aria-label={`${valueLabel} bar chart with ${data.length} bars`}>
+    <LazyChart height={height} label={`${valueLabel} bar chart with ${data.length} bars`}>{() => (
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: 0 }} barCategoryGap="22%">
           <CartesianGrid vertical={false} stroke="var(--line)" strokeDasharray="3 4" />
@@ -117,12 +143,12 @@ export function PnlBars({ data, currency, height = 220, valueLabel = "Net P&L", 
               ...(extra ? extra(p) : []),
             ]} />;
           }} />
-          <Bar dataKey="value" radius={[4, 4, 4, 4]} maxBarSize={28} isAnimationActive animationDuration={800} animationEasing="ease-out">
+          <Bar dataKey="value" radius={[4, 4, 4, 4]} maxBarSize={28} isAnimationActive={!reduce} animationDuration={900} animationEasing="ease-out" activeBar={{ fillOpacity: 0.85 }}>
             {data.map((d, i) => <Cell key={i} fill={d.value >= 0 ? "var(--profit)" : "var(--loss)"} />)}
           </Bar>
         </BarChart>
       </ResponsiveContainer>
-    </div>
+    )}</LazyChart>
   );
 }
 

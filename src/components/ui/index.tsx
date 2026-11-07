@@ -6,8 +6,9 @@ import {
   type ButtonHTMLAttributes, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes, type TextareaHTMLAttributes,
 } from "react";
 import { createPortal } from "react-dom";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { CountUp } from "@/components/motion";
+import { EASE, popover } from "@/components/motion/variants";
 import Link from "next/link";
 import { AlertTriangle, Check, ChevronDown, Info, Loader2, X } from "lucide-react";
 
@@ -214,7 +215,7 @@ export function TagInput({ value, onChange, placeholder = "Add tag…", suggesti
 // ───────────────────────── Surfaces ─────────────────────────
 
 export function Card({ className, children, as: As = "section", ...rest }: { className?: string; children: ReactNode; as?: "section" | "div" | "article" } & Record<string, unknown>) {
-  return <As className={cx("rounded-lg bg-surface shadow-[0_0_0_1px_var(--line),var(--shadow-card)]", className)} {...rest}>{children}</As>;
+  return <As className={cx("surface-card rounded-lg", className)} {...rest}>{children}</As>;
 }
 
 export function CardHeader({ title, subtitle, action, className }: { title: ReactNode; subtitle?: ReactNode; action?: ReactNode; className?: string }) {
@@ -263,28 +264,42 @@ export function Skeleton({ className }: { className?: string }) {
   return <div className={cx("skeleton", className)} aria-hidden />;
 }
 
+const EMPTY_ICON = { hidden: { opacity: 0, scale: 0.8 }, show: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: EASE } } };
+const EMPTY_ITEM = { hidden: { opacity: 0, y: 6 }, show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: EASE } } };
+
 export function EmptyState({ icon, title, description, action, className }: { icon?: ReactNode; title: string; description?: ReactNode; action?: ReactNode; className?: string }) {
   return (
-    <div className={cx("flex flex-col items-center justify-center px-6 py-12 text-center", className)}>
-      {icon && <div className="mb-4 flex size-11 items-center justify-center rounded-lg bg-subtle text-ink-3 shadow-[0_0_0_1px_var(--line)] [&_svg]:size-5">{icon}</div>}
-      <h3 className="text-[15px] font-medium tracking-[-0.02em]">{title}</h3>
-      {description && <p className="mt-1 max-w-sm text-[13px] leading-relaxed text-muted">{description}</p>}
-      {action && <div className="mt-5 flex flex-wrap justify-center gap-2">{action}</div>}
-    </div>
+    <motion.div className={cx("flex flex-col items-center justify-center px-6 py-14 text-center", className)}
+      initial="hidden" animate="show" variants={{ hidden: {}, show: { transition: { staggerChildren: 0.07 } } }}>
+      {icon && (
+        <motion.div variants={EMPTY_ICON} className="relative mb-5">
+          <span aria-hidden className="absolute -inset-3 rounded-2xl bg-primary-soft/50 blur-md" />
+          <span className="float-slow relative flex size-12 items-center justify-center rounded-xl bg-surface text-primary-text shadow-[0_0_0_1px_var(--line),var(--shadow-pop)] [&_svg]:size-5">{icon}</span>
+        </motion.div>
+      )}
+      <motion.h3 variants={EMPTY_ITEM} className="text-[15px] font-medium tracking-[-0.02em]">{title}</motion.h3>
+      {description && <motion.p variants={EMPTY_ITEM} className="mt-1 max-w-sm text-[13px] leading-relaxed text-muted">{description}</motion.p>}
+      {action && <motion.div variants={EMPTY_ITEM} className="mt-5 flex flex-wrap justify-center gap-2">{action}</motion.div>}
+    </motion.div>
   );
 }
 
 export function PageHeader({ title, description, actions, icon }: { title: string; description?: ReactNode; actions?: ReactNode; icon?: ReactNode }) {
   return (
-    <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+    <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
       <div className="flex min-w-0 items-center gap-3">
-        {icon && <span className="hidden size-9 items-center justify-center rounded-lg bg-subtle text-ink-3 shadow-[0_0_0_1px_var(--line)] sm:flex [&_svg]:size-[18px]">{icon}</span>}
+        {icon && (
+          <motion.span initial={{ opacity: 0, scale: 0.85, rotate: -6 }} animate={{ opacity: 1, scale: 1, rotate: 0 }} transition={{ duration: 0.5, ease: EASE }}
+            className="surface-card hidden size-10 items-center justify-center rounded-xl text-ink-3 sm:flex [&_svg]:size-[18px]">{icon}</motion.span>
+        )}
         <div className="min-w-0">
-          <h1 className="text-[24px] font-medium leading-tight tracking-[-0.04em] sm:text-[26px]">{title}</h1>
-          {description && <p className="mt-1 text-[14px] text-muted">{description}</p>}
+          <div className="overflow-hidden">
+            <motion.h1 initial={{ y: "100%" }} animate={{ y: "0%" }} transition={{ duration: 0.6, ease: EASE }} className="text-[24px] font-medium leading-tight tracking-[-0.04em] sm:text-[26px]">{title}</motion.h1>
+          </div>
+          {description && <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.12 }} className="mt-1 text-[14px] text-muted">{description}</motion.p>}
         </div>
       </div>
-      {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
+      {actions && <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, ease: EASE, delay: 0.1 }} className="flex flex-wrap items-center gap-2">{actions}</motion.div>}
     </div>
   );
 }
@@ -317,12 +332,14 @@ export function Modal({ open, onClose, title, description, children, footer, siz
     }, 20);
     return () => { document.removeEventListener("keydown", onKey); document.body.style.overflow = ""; clearTimeout(t); prev?.focus?.(); };
   }, [open, onClose]);
-  if (!open || typeof document === "undefined") return null;
+  if (typeof document === "undefined") return null;
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-4">
-      <div className="absolute inset-0 bg-[var(--overlay)] animate-fade-in" onClick={onClose} aria-hidden />
+    <AnimatePresence>
+    {open && (
+    <div key="modal" className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-4">
+      <motion.div className="absolute inset-0 bg-[var(--overlay)] backdrop-blur-[2px]" onClick={onClose} aria-hidden initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} />
       <motion.div ref={ref} role="dialog" aria-modal="true" aria-labelledby={titleId}
-        initial={{ opacity: 0, y: 24, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ type: "spring", stiffness: 420, damping: 34 }}
+        initial={{ opacity: 0, y: 24, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 12, scale: 0.98, transition: { duration: 0.16, ease: EASE } }} transition={{ type: "spring", stiffness: 420, damping: 34 }}
         className={cx("relative flex max-h-[92dvh] w-full flex-col rounded-t-xl bg-raised shadow-pop sm:rounded-xl",
           size === "sm" ? "sm:max-w-md" : size === "lg" ? "sm:max-w-3xl" : size === "xl" ? "sm:max-w-5xl" : "sm:max-w-xl")}>
         <div className="flex items-start justify-between gap-4 border-b border-line px-5 py-4">
@@ -335,7 +352,9 @@ export function Modal({ open, onClose, title, description, children, footer, siz
         <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4 scrollbar-thin">{children}</div>
         {footer && <div className="flex flex-wrap justify-end gap-2 border-t border-line px-5 py-3 safe-bottom">{footer}</div>}
       </motion.div>
-    </div>,
+    </div>
+    )}
+    </AnimatePresence>,
     document.body,
   );
 }
@@ -367,17 +386,20 @@ export function Menu({ trigger, children, align = "end", className }: { trigger:
   return (
     <div ref={ref} className="relative">
       {trigger({ open, toggle: () => setOpen((o) => !o) })}
-      {open && (
-        <div role="menu" className={cx("absolute z-40 mt-1.5 min-w-48 rounded-lg bg-raised p-1 shadow-[0_0_0_1px_var(--line),var(--shadow-pop)] animate-rise", align === "end" ? "right-0" : "left-0", className)}>
-          {children(() => setOpen(false))}
-        </div>
-      )}
+      <AnimatePresence>
+        {open && (
+          <motion.div role="menu" variants={popover} initial="hidden" animate="show" exit="exit" style={{ transformOrigin: align === "end" ? "top right" : "top left" }}
+            className={cx("absolute z-40 mt-1.5 min-w-48 rounded-lg bg-raised p-1 shadow-[0_0_0_1px_var(--line),var(--shadow-pop)]", align === "end" ? "right-0" : "left-0", className)}>
+            {children(() => setOpen(false))}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
 
 export function MenuItem({ onClick, children, icon, danger, href }: { onClick?: () => void; children: ReactNode; icon?: ReactNode; danger?: boolean; href?: string }) {
-  const cls = cx("flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 text-left text-[13.5px] transition-colors [&_svg]:size-4", danger ? "text-loss hover:bg-loss-soft" : "text-ink-3 hover:bg-muted-bg hover:text-ink");
+  const cls = cx("flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 text-left text-[13.5px] transition-colors [&_svg]:size-4 [&_svg]:transition-transform hover:[&_svg]:translate-x-0.5", danger ? "text-loss hover:bg-loss-soft" : "text-ink-3 hover:bg-muted-bg hover:text-ink");
   if (href) return <Link role="menuitem" href={href} onClick={onClick} className={cls}>{icon}{children}</Link>;
   return <button role="menuitem" type="button" onClick={onClick} className={cls}>{icon}{children}</button>;
 }
@@ -401,13 +423,15 @@ export function Toaster() {
   const list = useSyncExternalStore((cb) => { listeners.add(cb); return () => listeners.delete(cb); }, () => toasts, () => toasts);
   return (
     <div aria-live="polite" className="pointer-events-none fixed inset-x-0 bottom-20 z-[60] flex flex-col items-center gap-2 px-4 lg:bottom-6 lg:items-end lg:pr-6">
+      <AnimatePresence>
       {list.map((t) => (
-        <motion.div key={t.id} role={t.kind === "error" ? "alert" : "status"} initial={{ opacity: 0, y: 16, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ type: "spring", stiffness: 500, damping: 32 }}
+        <motion.div key={t.id} layout exit={{ opacity: 0, y: 8, scale: 0.96, transition: { duration: 0.18 } }} role={t.kind === "error" ? "alert" : "status"} initial={{ opacity: 0, y: 16, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ type: "spring", stiffness: 500, damping: 32 }}
           className="pointer-events-auto flex max-w-sm items-center gap-2.5 rounded-lg bg-ink-2 px-3.5 py-2.5 text-[13.5px] text-bg shadow-pop">
           {t.kind === "success" ? <Check className="size-4 text-profit" /> : t.kind === "error" ? <AlertTriangle className="size-4 text-loss" /> : <Info className="size-4 text-primary-light" />}
           <span>{t.message}</span>
         </motion.div>
       ))}
+      </AnimatePresence>
     </div>
   );
 }
