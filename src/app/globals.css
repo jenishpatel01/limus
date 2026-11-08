@@ -10,21 +10,22 @@
 
 :root,
 [data-theme="light"] {
-  --bg: #ffffff;
-  --bg-subtle: #f9fafb;
-  --bg-muted: #f3f4f6;
+  --bg: #e6edff;
+  --bg-subtle: #eef3ff;
+  --bg-muted: #dbe5fb;
+  --page-wash: linear-gradient(180deg, #e3ebff 0%, #efe8ff 30%, #e2f1ff 62%, #e8ecff 100%);
   --surface: #ffffff;
   --surface-raised: #ffffff;
-  --line: #e5e7eb;
-  --line-strong: #d1d5db;
+  --line: #d3dcf3;
+  --line-strong: #bcc8e8;
   --ink: #000000;
   --ink-2: #1c1c1c;
-  --ink-3: #3d3d3d;
-  --body: #616161;
+  --ink-3: #2b3142;
+  --body: #454c60;
   --mosaic-bg: #e9eefc;
   --mosaic-glow: #ffffff;
-  --muted: #7a7a7a;
-  --faint: #adadad;
+  --muted: #505972;
+  --faint: #727b94;
   --primary: #124eeb;
   --primary-hover: #0f43cc;
   --primary-soft: #dae2f7;
@@ -54,6 +55,7 @@
   --bg: #0a0a0a;
   --bg-subtle: #101010;
   --bg-muted: #191919;
+  --page-wash: none;
   --surface: #121212;
   --surface-raised: #181818;
   --line: #242424;
@@ -199,20 +201,20 @@
    components/brand/Backdrops.tsx). In the components layer so utility classes (sticky, absolute,
    shadow-*, bg-*) still override it. */
 :root, [data-theme="light"] {
-  --glass-bg: rgba(255, 255, 255, .55);
-  --glass-sheen: rgba(255, 255, 255, .65);
-  --glass-strong: rgba(255, 255, 255, .84);
-  --glass-bar: rgba(255, 255, 255, .62);
-  --glass-input: rgba(255, 255, 255, .7);
-  --glass-rim: rgba(255, 255, 255, .85);
-  --glass-edge: rgba(24, 32, 80, .08);
-  --glass-hi: rgba(255, 255, 255, .95);
-  --glass-shadow: 0 10px 34px -12px rgba(30, 45, 120, .18), 0 2px 8px -4px rgba(30, 45, 120, .08);
-  --glass-blur: 18px;
-  --glass-sat: 1.7;
-  --orb-1: rgba(18, 78, 235, .30);
-  --orb-2: rgba(34, 211, 238, .26);
-  --orb-3: rgba(139, 92, 246, .24);
+  --glass-bg: rgba(255, 255, 255, .42);
+  --glass-sheen: rgba(255, 255, 255, .8);
+  --glass-strong: rgba(255, 255, 255, .78);
+  --glass-bar: rgba(255, 255, 255, .5);
+  --glass-input: rgba(255, 255, 255, .62);
+  --glass-rim: rgba(255, 255, 255, .95);
+  --glass-edge: rgba(70, 96, 210, .22);
+  --glass-hi: #ffffff;
+  --glass-shadow: 0 18px 44px -14px rgba(52, 72, 200, .34), 0 3px 12px -4px rgba(52, 72, 200, .16), inset 0 -1px 0 rgba(96, 120, 240, .22);
+  --glass-blur: 22px;
+  --glass-sat: 1.9;
+  --orb-1: rgba(35, 92, 245, .50);
+  --orb-2: rgba(30, 205, 235, .42);
+  --orb-3: rgba(150, 90, 250, .40);
 }
 [data-theme="dark"] {
   --glass-bg: rgba(255, 255, 255, .05);
@@ -301,7 +303,7 @@
 @layer base {
   html { -webkit-text-size-adjust: 100%; }
   body {
-    background: var(--bg);
+    background: var(--page-wash, none), var(--bg);
     color: var(--ink);
     font-family: var(--font-sans);
     font-weight: 400;

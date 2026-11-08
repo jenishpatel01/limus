@@ -27,7 +27,7 @@ const INTRO = 1.2;
 
 export default function Home() {
   return (
-    <div className="bg-bg text-ink">
+    <div className="text-ink">
       <PageIntro />
       <ScrollProgress />
       <Nav />
@@ -140,7 +140,6 @@ function HeroCollage() {
         </div>
       </div>
       {/* Fades: left edge into the text column, bottom (extended past the box, where tilted cards overhang). */}
-      <div className="pointer-events-none absolute inset-y-0 -left-8 w-1/3 bg-gradient-to-r from-bg/70 to-transparent" />
       <div className="pointer-events-none absolute -bottom-56 -left-[20%] -right-[40%] h-[22rem] bg-gradient-to-t from-bg from-55% to-transparent [-webkit-mask-image:linear-gradient(90deg,transparent,#000_35%)] [mask-image:linear-gradient(90deg,transparent,#000_35%)]" />
     </div>
   );
@@ -321,7 +320,7 @@ function Features() {
     { icon: Upload, t: "CSV import", d: "Map columns, validate every row and skip duplicates automatically." },
   ];
   return (
-    <section id="features" className="relative scroll-mt-20 overflow-hidden border-t border-line bg-subtle py-24 lg:py-32">
+    <section id="features" className="relative scroll-mt-20 overflow-hidden border-t border-line bg-subtle/40 py-24 lg:py-32">
       <Orbs variant={2} />
       <GridDrift />
       <div className="relative z-10 mx-auto max-w-[1400px] px-4 sm:px-8 lg:px-[52px]">
