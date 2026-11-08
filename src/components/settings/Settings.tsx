@@ -15,7 +15,7 @@ import { useTheme, type ThemePref } from "@/components/app/theme";
 function Section({ id, title, description, children }: { id?: string; title: string; description?: string; children: ReactNode }) {
   return (
     <Card id={id} className="scroll-mt-24">
-      <div className="grid gap-6 p-5 md:grid-cols-[260px_minmax(0,1fr)] md:p-6">
+      <div className="grid grid-cols-1 gap-6 p-5 md:grid-cols-[260px_minmax(0,1fr)] md:p-6">
         <div><h2 className="text-[15px] font-medium tracking-[-0.02em]">{title}</h2>{description && <p className="mt-1 text-[13px] leading-relaxed text-muted">{description}</p>}</div>
         <div className="min-w-0">{children}</div>
       </div>
@@ -55,7 +55,7 @@ export function SettingsPage() {
       <PageHeader title="Settings" icon={<SettingsIcon />} description="Your profile, preferences and data." />
       <div className="space-y-4">
         <Section title="Profile" description="Your timezone decides which day a trade belongs to in the calendar and reports.">
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field label="Name" htmlFor="st-name"><Input id="st-name" maxLength={80} value={name} onChange={(e) => setName(e.target.value)} /></Field>
             <Field label="Email" htmlFor="st-email"><Input id="st-email" value={user.email ?? ""} disabled /></Field>
             <Field label="Timezone" htmlFor="st-tz"><Select id="st-tz" value={zone} onChange={(e) => setZone(e.target.value)}>{zones().map((z) => <option key={z} value={z}>{z.replace(/_/g, " ")}</option>)}</Select></Field>

@@ -22,7 +22,7 @@ type ButtonSize = "sm" | "md" | "lg";
 const buttonBase = "inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md font-medium transition-[background-color,box-shadow,color,opacity,transform] duration-150 active:scale-[0.97] disabled:opacity-50 disabled:active:scale-100 select-none";
 const buttonVariants: Record<ButtonVariant, string> = {
   primary: "bg-primary text-on-primary font-button font-semibold tracking-[-0.015em] shadow-btn hover:bg-primary-hover",
-  secondary: "bg-surface text-ink shadow-[0_0_0_1px_var(--line-strong),var(--shadow-btn)] hover:bg-subtle",
+  secondary: "bg-[var(--glass-input)] text-ink shadow-[0_0_0_1px_var(--line-strong),inset_0_1px_0_var(--glass-hi),var(--shadow-btn)] hover:bg-[var(--glass-strong)]",
   dark: "bg-ink-2 text-bg shadow-btn hover:opacity-90",
   ghost: "text-ink-3 hover:bg-muted-bg hover:text-ink",
   danger: "bg-loss text-white shadow-btn hover:opacity-90",
@@ -74,7 +74,7 @@ export const IconButton = forwardRef<HTMLButtonElement, ButtonHTMLAttributes<HTM
 
 // ───────────────────────── Form controls ─────────────────────────
 
-const controlBase = "w-full rounded-md bg-surface text-[14px] text-ink placeholder:text-faint shadow-[0_0_0_1px_var(--line-strong)] transition-shadow outline-none focus:shadow-[0_0_0_1px_var(--primary),0_0_0_4px_var(--primary-soft)] disabled:bg-muted-bg disabled:text-muted aria-[invalid=true]:shadow-[0_0_0_1px_var(--loss)]";
+const controlBase = "w-full rounded-md bg-[var(--glass-input)] text-[14px] text-ink placeholder:text-faint shadow-[0_0_0_1px_var(--line-strong)] transition-shadow outline-none focus:shadow-[0_0_0_1px_var(--primary),0_0_0_4px_var(--primary-soft)] disabled:bg-muted-bg disabled:text-muted aria-[invalid=true]:shadow-[0_0_0_1px_var(--loss)]";
 
 export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement> & { prefix?: string; suffix?: string }>(function Input(
   { className, prefix, suffix, ...rest }, ref,
@@ -337,10 +337,10 @@ export function Modal({ open, onClose, title, description, children, footer, siz
     <AnimatePresence>
     {open && (
     <div key="modal" className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-4">
-      <motion.div className="absolute inset-0 bg-[var(--overlay)] backdrop-blur-[2px]" onClick={onClose} aria-hidden initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} />
+      <motion.div className="absolute inset-0 bg-[var(--overlay)] backdrop-blur-[6px]" onClick={onClose} aria-hidden initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} />
       <motion.div ref={ref} role="dialog" aria-modal="true" aria-labelledby={titleId}
         initial={{ opacity: 0, y: 24, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 12, scale: 0.98, transition: { duration: 0.16, ease: EASE } }} transition={{ type: "spring", stiffness: 420, damping: 34 }}
-        className={cx("relative flex max-h-[92dvh] w-full flex-col rounded-t-xl bg-raised shadow-pop sm:rounded-xl",
+        className={cx("glass-strong relative flex max-h-[92dvh] w-full flex-col rounded-t-xl sm:rounded-xl",
           size === "sm" ? "sm:max-w-md" : size === "lg" ? "sm:max-w-3xl" : size === "xl" ? "sm:max-w-5xl" : "sm:max-w-xl")}>
         <div className="flex items-start justify-between gap-4 border-b border-line px-5 py-4">
           <div>
@@ -389,7 +389,7 @@ export function Menu({ trigger, children, align = "end", className }: { trigger:
       <AnimatePresence>
         {open && (
           <motion.div role="menu" variants={popover} initial="hidden" animate="show" exit="exit" style={{ transformOrigin: align === "end" ? "top right" : "top left" }}
-            className={cx("absolute z-40 mt-1.5 min-w-48 rounded-lg bg-raised p-1 shadow-[0_0_0_1px_var(--line),var(--shadow-pop)]", align === "end" ? "right-0" : "left-0", className)}>
+            className={cx("glass-strong absolute z-40 mt-1.5 min-w-48 rounded-lg p-1", align === "end" ? "right-0" : "left-0", className)}>
             {children(() => setOpen(false))}
           </motion.div>
         )}
@@ -426,7 +426,7 @@ export function Toaster() {
       <AnimatePresence>
       {list.map((t) => (
         <motion.div key={t.id} layout exit={{ opacity: 0, y: 8, scale: 0.96, transition: { duration: 0.18 } }} role={t.kind === "error" ? "alert" : "status"} initial={{ opacity: 0, y: 16, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ type: "spring", stiffness: 500, damping: 32 }}
-          className="pointer-events-auto flex max-w-sm items-center gap-2.5 rounded-lg bg-ink-2 px-3.5 py-2.5 text-[13.5px] text-bg shadow-pop">
+          className="glass-strong pointer-events-auto flex max-w-sm items-center gap-2.5 rounded-lg px-3.5 py-2.5 text-[13.5px] text-ink">
           {t.kind === "success" ? <Check className="size-4 text-profit" /> : t.kind === "error" ? <AlertTriangle className="size-4 text-loss" /> : <Info className="size-4 text-primary-light" />}
           <span>{t.message}</span>
         </motion.div>

@@ -57,7 +57,7 @@ export function AccountModal({ open, onClose, account, onSaved }: { open: boolea
   return (
     <Modal open={open} onClose={onClose} title={account ? "Edit account" : "New trading account"} description="Balances, trades and cash movements are tracked separately for each account."
       footer={<><Button onClick={onClose}>Cancel</Button><Button variant="primary" loading={saving} onClick={save}>{account ? "Save changes" : "Create account"}</Button></>}>
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field label="Account name" htmlFor="a-name" error={e("name")} className="sm:col-span-2"><Input id="a-name" maxLength={80} value={f.name} onChange={(ev) => setF({ ...f, name: ev.target.value })} placeholder="e.g. FTMO 100k challenge" /></Field>
         <Field label="Broker / exchange" htmlFor="a-broker" optional><Input id="a-broker" maxLength={80} value={f.broker} onChange={(ev) => setF({ ...f, broker: ev.target.value })} /></Field>
         <Field label="Account type" htmlFor="a-type"><Select id="a-type" value={f.type} onChange={(ev) => setF({ ...f, type: ev.target.value as AccountType })}>{Object.entries(ACCOUNT_TYPE_LABEL).map(([v, l]) => <option key={v} value={v}>{l}</option>)}</Select></Field>

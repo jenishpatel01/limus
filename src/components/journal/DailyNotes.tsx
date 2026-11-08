@@ -36,7 +36,7 @@ export function NoteEditor({ open, onClose, entry, defaultDate }: { open: boolea
     <Modal open={open} onClose={onClose} title={entry ? "Edit note" : "New journal note"} description="Pre-market plans, end-of-day reviews and weekly reflections."
       footer={<><Button onClick={onClose}>Cancel</Button><Button variant="primary" loading={saving} disabled={!date || (!notes.trim() && !lessons.trim() && !title.trim())} onClick={save}>Save note</Button></>}>
       <div className="grid gap-4">
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field label="Type" htmlFor="n-kind"><Select id="n-kind" value={kind} onChange={(e) => setKind(e.target.value as JournalKind)}><option value="daily">Daily review</option><option value="weekly">Weekly review</option><option value="note">General note</option></Select></Field>
           <Field label="Date" htmlFor="n-date"><Input id="n-date" type="date" value={date} onChange={(e) => setDate(e.target.value)} /></Field>
         </div>
@@ -90,7 +90,7 @@ export function DailyNotes() {
       {notes.length === 0 ? (
         <Card><EmptyState icon={<NotebookPen />} title="No daily notes yet" description="Write a pre-market plan or an end-of-day review. Notes show up on the calendar too." action={<Button variant="primary" onClick={() => setEditing("new")}>Write a note</Button>} /></Card>
       ) : (
-        <div className="grid gap-3 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           {notes.map((n) => <NoteCard key={n.id} entry={n} onEdit={() => setEditing(n)} onDelete={() => setConfirm(n)} />)}
         </div>
       )}

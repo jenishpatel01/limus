@@ -112,7 +112,7 @@ export function ImportPage() {
       </ol>
 
       {step === "upload" && (
-        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
           <Card className="p-5">
             <Field label="Import into account" htmlFor="imp-acc">
               <Select id="imp-acc" value={accountId} onChange={(e) => setAccountId(e.target.value)}>
@@ -147,7 +147,7 @@ export function ImportPage() {
         <Card>
           <CardHeader title={`Map columns · ${fileName}`} subtitle={`${rows.length.toLocaleString()} rows, ${headers.length} columns${rows.length > MAX_ROWS ? `. Only the first ${MAX_ROWS.toLocaleString()} rows will be imported.` : ""}`} />
           {parseErrors.length > 0 && <Notice tone="warn" className="mx-5 mt-4">Some lines couldn&apos;t be read: {parseErrors.join("; ")}</Notice>}
-          <div className="grid gap-x-6 gap-y-4 p-5 md:grid-cols-2 xl:grid-cols-3">
+          <div className="grid grid-cols-1 gap-x-6 gap-y-4 p-5 md:grid-cols-2 xl:grid-cols-3">
             {FIELDS.map((f) => (
               <Field key={f.key} label={<>{f.label}{f.required && <span className="text-loss"> *</span>}</>} htmlFor={`map-${f.key}`} hint={sample(mapping[f.key]) || f.hint}>
                 <Select id={`map-${f.key}`} value={mapping[f.key] ?? ""} aria-invalid={f.required && !mapping[f.key]} onChange={(e) => setMapping({ ...mapping, [f.key]: e.target.value || undefined })}>
@@ -157,7 +157,7 @@ export function ImportPage() {
               </Field>
             ))}
           </div>
-          <div className="grid gap-4 border-t border-line p-5 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 border-t border-line p-5 md:grid-cols-3">
             <Field label="Date order" hint="For ambiguous dates like 03/04/2026."><Segmented size="md" ariaLabel="Date order" value={dateOrder} onChange={setDateOrder} options={[{ value: "auto", label: "Auto" }, { value: "dmy", label: "DD/MM" }, { value: "mdy", label: "MM/DD" }]} /></Field>
             <Field label="Times in the file are in"><Segmented size="md" ariaLabel="Timezone" value={timeZone} onChange={setTimeZone} options={[{ value: "user", label: tz.replace(/_/g, " ") }, { value: "UTC", label: "UTC" }]} /></Field>
             <Field label="Number format"><Checkbox checked={decimalComma} onChange={setDecimalComma} label="Comma is the decimal separator (1.234,56)" /></Field>

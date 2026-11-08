@@ -114,7 +114,7 @@ export function TradeDetail() {
         <Kpi label="Holding time" value={duration(hold)} sub={trade.session ? SESSION_LABEL[trade.session] : undefined} />
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
         <div className="stagger min-w-0 space-y-4">
           <Card>
             <CardHeader title="Execution" />
@@ -138,7 +138,7 @@ export function TradeDetail() {
               <div className="space-y-5 p-5 text-[14px]">
                 <Text label="Pre-trade analysis" value={journal.pre_trade_analysis} />
                 <Text label="Post-trade analysis" value={journal.post_trade_analysis} />
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
                     <p className="text-[12px] text-muted">Emotional state</p>
                     <div className="mt-1.5 flex flex-wrap gap-1">{journal.emotional_state ? <Badge tone="primary">{journal.emotional_state}</Badge> : <span className="text-faint">—</span>}{journal.emotions.filter((e) => e !== journal.emotional_state).map((e) => <Badge key={e}>{e}</Badge>)}</div>

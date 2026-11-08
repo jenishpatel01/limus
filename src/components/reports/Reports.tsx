@@ -98,7 +98,7 @@ export function ReportsPage() {
       <PageHeader title="Reports" icon={<FileText />} description="Performance reports from your trades, ready to download as PDF or CSV." />
       <Card className="mb-6 p-5">
         <Segmented size="md" ariaLabel="Report type" value={period} onChange={setPeriod} options={TYPES} />
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {(period === "daily" || period === "weekly") && <Field label={period === "daily" ? "Day" : "Any day in the week"} htmlFor="r-day"><Input id="r-day" type="date" value={anchor} max={today} onChange={(e) => setAnchor(e.target.value)} /></Field>}
           {period === "monthly" && <Field label="Month" htmlFor="r-month"><Input id="r-month" type="month" value={month} onChange={(e) => setMonth(e.target.value)} /></Field>}
           {period === "yearly" && <Field label="Year" htmlFor="r-year"><Input id="r-year" type="number" min={2000} max={2100} value={year} onChange={(e) => setYear(e.target.value)} /></Field>}
@@ -144,12 +144,12 @@ export function ReportsPage() {
             <StatCard label="Profit factor" value={ratio(report.stats.profitFactor)} sub={`Expectancy ${money(report.stats.expectancy, report.currency, { compact: true })}`} />
             <StatCard label="Average R" value={rMult(report.stats.avgR)} sub={`Max DD ${pct(report.dd.maxDrawdownPct, 2)}`} />
           </div>
-          <div className="mb-6 grid gap-4 lg:grid-cols-2">
+          <div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
             <Card><CardHeader title="Balance" subtitle={`${money(report.startBalance, report.currency)} → ${money(report.endBalance, report.currency)}`} /><div className="p-4 pt-3"><EquityChart data={curveToChart(report.curve, tz)} currency={report.currency} height={230} /></div></Card>
             <Card><CardHeader title="Daily results" subtitle={`${report.days.length} trading day${report.days.length === 1 ? "" : "s"}`} /><div className="p-4 pt-3"><PnlBars data={report.days.map((d) => ({ label: dayLabel(d.day, { day: "numeric", month: "short" }), sub: dayLabel(d.day), value: d.pnl, trades: d.trades }))} currency={report.currency} height={230} /></div></Card>
           </div>
           {report.stats.totalTrades > 0 ? (
-            <div className="mb-6 grid gap-4 lg:grid-cols-2">
+            <div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
               <BreakdownCard title="By strategy" rows={report.byStrategy} currency={report.currency} />
               <BreakdownCard title="By asset class" rows={report.byAsset} currency={report.currency} />
             </div>

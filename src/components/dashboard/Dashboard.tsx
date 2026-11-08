@@ -118,7 +118,7 @@ export function Dashboard() {
 
       {/* Portfolio summary */}
       <Card className="mb-6 overflow-hidden">
-        <div className="grid gap-0 lg:grid-cols-[minmax(0,320px)_1fr]">
+        <div className="grid grid-cols-1 gap-0 lg:grid-cols-[minmax(0,320px)_1fr]">
           <div className="relative overflow-hidden border-b border-line p-5 lg:border-b-0 lg:border-r">
             <div aria-hidden className="pointer-events-none absolute -left-16 -top-24 size-64 rounded-full bg-primary-soft/60 blur-3xl" />
             <div className="relative">
@@ -160,7 +160,7 @@ export function Dashboard() {
         <StatCard icon={<Gauge />} label="Open positions" value={openTrades.length} sub={portfolio.openRisk ? `${money(portfolio.openRisk, currency, { compact: true })} at risk` : undefined} />
       </div>
 
-      <div className="stagger mb-6 grid gap-4 lg:grid-cols-2">
+      <div className="stagger mb-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Card>
           <CardHeader title="Daily P&L" subtitle={`${dayLabel(dailyFrom)} – ${dayLabel(range.to ?? today)}`} />
           <div className="p-4 pt-3"><PnlBars data={dailyData} currency={currency} height={230} /></div>
@@ -171,7 +171,7 @@ export function Dashboard() {
         </Card>
       </div>
 
-      <div className="stagger mb-6 grid gap-4 lg:grid-cols-3">
+      <div className="stagger mb-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
         <Card>
           <CardHeader title="Asset allocation" subtitle="Share of closed trades by asset class" />
           <div className="p-5">
@@ -217,7 +217,7 @@ export function Dashboard() {
         </Card>
       </div>
 
-      <div className="mb-6 grid gap-4 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
+      <div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
         <Card>
           <CardHeader title="Recent trading activity" action={<Link href="/app/journal" className="text-[13px] text-primary-text hover:underline">View journal</Link>} />
           <div className="mt-2 overflow-x-auto">
@@ -270,7 +270,7 @@ export function Dashboard() {
 
       <Card>
         <CardHeader title="Account summaries" action={<Link href="/app/portfolio" className="text-[13px] text-primary-text hover:underline">Manage accounts</Link>} />
-        <div className="stagger grid gap-3 p-5 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="stagger grid grid-cols-1 gap-3 p-5 sm:grid-cols-2 xl:grid-cols-3">
           {scopedSummaries.map((s) => (
             <Link key={s.account.id} href={`/app/portfolio/${s.account.id}`} className="lift block rounded-lg p-4 shadow-[0_0_0_1px_var(--line)]">
               <div className="flex items-center justify-between gap-2">

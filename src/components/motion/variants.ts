@@ -76,6 +76,6 @@ export const popover: Variants = {
 
 /** Route-level content entrance (fast so navigation never feels delayed). */
 export const page = (lite: boolean): Variants => ({
-  hidden: { opacity: 0, y: lite ? 14 : 28, ...(lite ? {} : { filter: "blur(6px)" }) },
-  show: { opacity: 1, y: 0, ...(lite ? {} : { filter: "blur(0px)", transitionEnd: { filter: "none" } }), transition: { duration: DUR.base, ease: EASE } },
+  hidden: { opacity: 0, y: lite ? 14 : 28 },
+  show: { opacity: 1, y: 0, transition: { duration: DUR.base, ease: EASE } },
 });

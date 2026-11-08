@@ -64,7 +64,7 @@ export function AnalyticsPage() {
       <PageHeader title="Analytics" icon={<BarChart3 />} description="How your trading performs, from the trades you've closed." actions={<RangeFilter state={rangeState} />} />
 
       <Card className="mb-6 p-3">
-        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
           <Select aria-label="Account" value={accountId} onChange={(e) => setAccountId(e.target.value)}>
             <option value="">All accounts in view ({currency})</option>
             {scopedAccounts.map((a) => <option key={a.id} value={a.id}>{a.name} · {a.currency}</option>)}
@@ -95,12 +95,12 @@ export function AnalyticsPage() {
             <StatCard label="Streaks" value={<span><span className="text-profit">{stats.maxConsecWins}W</span> <span className="text-faint">/</span> <span className="text-loss">{stats.maxConsecLosses}L</span></span>} sub={`avg hold ${duration(stats.avgHoldMinutes)}`} hint="Most consecutive wins / losses" />
           </div>
 
-          <div className="mb-6 grid gap-4 lg:grid-cols-2">
+          <div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
             <Card><CardHeader title="Equity curve" subtitle={filtersActive ? "Balance from filtered trades only" : "Balance including deposits and withdrawals"} /><div className="p-4 pt-3"><EquityChart data={curveToChart(curve.points, tz)} currency={cur} /></div></Card>
             <Card><CardHeader title="Drawdown curve" subtitle="% below the running peak" /><div className="p-4 pt-3"><DrawdownChart data={curveToChart(curve.points, tz, "drawdownPct")} height={260} /></div></Card>
           </div>
 
-          <div className="mb-6 grid gap-4 lg:grid-cols-2">
+          <div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
             <Card>
               <CardHeader title="Long vs short" />
               <div className="grid grid-cols-2 gap-px overflow-hidden rounded-b-lg bg-line mt-4">
@@ -134,7 +134,7 @@ export function AnalyticsPage() {
             <div className="overflow-x-auto p-5"><Heatmap monthly={monthly} currency={cur} /></div>
           </Card>
 
-          <div className="mb-6 grid gap-4 lg:grid-cols-2">
+          <div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
             <BreakdownCard title="Strategy comparison" rows={byStrategy} currency={cur} />
             <BreakdownCard title="Asset-class performance" rows={byAsset} currency={cur} />
             <BreakdownCard title="Session performance" rows={bySession} currency={cur} subtitle="By entry time (UTC session hours)" />

@@ -213,7 +213,7 @@ export function AccountDetail() {
       {(account.profit_target_pct || account.max_drawdown_pct || account.daily_loss_limit_pct) && (
         <Card className="mb-6 p-5">
           <h3 className="text-[15px] font-medium tracking-[-0.02em]">Account rules</h3>
-          <div className="mt-4 grid gap-5 md:grid-cols-3">
+          <div className="mt-4 grid grid-cols-1 gap-5 md:grid-cols-3">
             {account.profit_target_pct && <Progress label={`Profit target ${account.profit_target_pct}%`} value={targetProgress ?? 0} text={`${money(s.realisedPnl, cur)} of ${money(capital * account.profit_target_pct / 100, cur)}`} tone="profit" />}
             {account.max_drawdown_pct && <Progress label={`Max drawdown ${account.max_drawdown_pct}%`} value={ddUsed ?? 0} text={`Current ${pct(s.drawdown.currentDrawdownPct, 2)} · worst ${pct(s.drawdown.maxDrawdownPct, 2)}`} tone="loss" />}
             {account.daily_loss_limit_pct && <div><p className="text-[13px] text-ink-3">Daily loss limit {account.daily_loss_limit_pct}%</p><p className="mt-2 text-[12.5px] text-muted">Tracked on the <Link href="/app/risk" className="text-primary-text hover:underline">Risk page</Link>. You&apos;ll get an alert when a day&apos;s realised loss reaches it.</p></div>}
@@ -221,12 +221,12 @@ export function AccountDetail() {
         </Card>
       )}
 
-      <div className="mb-6 grid gap-4 lg:grid-cols-2">
+      <div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Card><CardHeader title="Equity curve" subtitle="All time, after each trade and cash movement" /><div className="p-4 pt-3"><EquityChart data={curveToChart(s.curve, tz)} currency={cur} baseline={s.initialBalance} /></div></Card>
         <Card><CardHeader title="Drawdown" subtitle="% below the running peak" /><div className="p-4 pt-3"><DrawdownChart data={curveToChart(s.curve, tz, "drawdownPct")} height={260} /></div></Card>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Card>
           <CardHeader title="Deposits & withdrawals" action={<Button size="sm" icon={<Plus className="size-3.5" />} onClick={() => setCashModal("deposit")}>Add</Button>} />
           <ul className="px-5 pb-4 pt-2">

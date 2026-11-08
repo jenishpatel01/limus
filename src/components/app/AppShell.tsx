@@ -15,6 +15,7 @@ import { DataProvider, useData } from "@/lib/data/store";
 import { Logo } from "@/components/brand/Logo";
 import { Badge, Button, ButtonLink, cx, IconButton, Menu, MenuItem, Skeleton, Toaster, Toggle } from "@/components/ui";
 import { MAIN_NAV, SECONDARY_NAV, isActive, type NavItem } from "./nav";
+import { Orbs } from "@/components/brand/Backdrops";
 import { applyThemeAnimated, useTheme } from "./theme";
 import { relativeTime } from "@/lib/format";
 
@@ -74,7 +75,8 @@ function Shell({ children }: { children: ReactNode }) {
 
   return (
     <div className="flex min-h-dvh bg-bg">
-      <aside className="sticky top-0 hidden h-dvh w-[248px] shrink-0 flex-col border-r border-line bg-surface lg:flex">
+      <Orbs variant={1} fixed />
+      <aside className="glass-bar sticky top-0 hidden h-dvh w-[248px] shrink-0 flex-col border-r border-line lg:flex">
         <SidebarContent />
       </aside>
 
@@ -82,7 +84,7 @@ function Shell({ children }: { children: ReactNode }) {
         {mobileOpen && (
           <div className="fixed inset-0 z-50 lg:hidden">
             <motion.div className="absolute inset-0 bg-[var(--overlay)]" onClick={() => setMobileOpen(false)} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} />
-            <motion.aside className="absolute inset-y-0 left-0 flex w-[280px] max-w-[85vw] flex-col bg-surface shadow-pop"
+            <motion.aside className="glass-strong absolute inset-y-0 left-0 flex w-[280px] max-w-[85vw] flex-col"
               initial={{ x: "-100%" }} animate={{ x: 0 }} exit={{ x: "-100%" }} transition={{ duration: 0.32, ease: EASE }}>
               <div className="flex justify-end px-3 pt-3"><IconButton label="Close menu" onClick={() => setMobileOpen(false)}><X className="size-4" /></IconButton></div>
               <SidebarContent />
@@ -119,7 +121,7 @@ function PageSkeleton() {
       <Skeleton className="h-8 w-60" />
       <Skeleton className="mt-2 h-4 w-80" />
       <div className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">{Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-28" />)}</div>
-      <div className="mt-6 grid gap-4 lg:grid-cols-3"><Skeleton className="h-72 lg:col-span-2" /><Skeleton className="h-72" /></div>
+      <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3"><Skeleton className="h-72 lg:col-span-2" /><Skeleton className="h-72" /></div>
     </div>
   );
 }
@@ -200,7 +202,7 @@ export function AccountSwitcher({ compact = false }: { compact?: boolean }) {
   return (
     <Menu align="start" className="w-72" trigger={({ toggle, open }) => (
       <button type="button" onClick={toggle} aria-expanded={open} aria-label="Switch account"
-        className="flex h-9 max-w-[260px] items-center gap-2 rounded-md bg-surface px-2.5 text-[13.5px] shadow-[0_0_0_1px_var(--line-strong)] transition-colors hover:bg-subtle">
+        className="flex h-9 max-w-[260px] items-center gap-2 rounded-md bg-[var(--glass-input)] px-2.5 text-[13.5px] shadow-[0_0_0_1px_var(--line-strong)] transition-colors hover:bg-[var(--glass-strong)]">
         {scope.kind === "demo" ? <FlaskConical className="size-4 shrink-0 text-warn" /> : <Wallet className="size-4 shrink-0 text-muted" />}
         <span className={cx("truncate font-medium", compact && "max-w-[120px]")}>{label}</span>
         {scope.kind === "demo" && <Badge tone="warn">Demo</Badge>}
@@ -248,7 +250,7 @@ function Topbar({ onMenu }: { onMenu: () => void }) {
   const [q, setQ] = useState("");
   const { scope } = useData();
   return (
-    <header className="sticky top-0 z-30 border-b border-line bg-bg/75 backdrop-blur-xl backdrop-saturate-150">
+    <header className="glass-bar sticky top-0 z-30 border-b border-line">
       {scope.kind === "demo" && (
         <div className="flex items-center justify-center gap-2 bg-warn-soft px-4 py-1.5 text-[12.5px] text-ink-3">
           <FlaskConical className="size-3.5 text-warn" />You&apos;re viewing the demo account. Its sample trades are never mixed with your real accounts.
@@ -263,7 +265,7 @@ function Topbar({ onMenu }: { onMenu: () => void }) {
             <span className="sr-only">Search trades</span>
             <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted" />
             <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search symbol, tag, setup…"
-              className="h-9 w-64 rounded-md bg-subtle pl-8 pr-3 text-[13.5px] shadow-[0_0_0_1px_var(--line)] outline-none placeholder:text-faint focus:bg-surface focus:shadow-[0_0_0_1px_var(--primary),0_0_0_4px_var(--primary-soft)]" />
+              className="h-9 w-64 rounded-md bg-[var(--glass-input)] pl-8 pr-3 text-[13.5px] shadow-[0_0_0_1px_var(--line)] outline-none placeholder:text-faint focus:bg-[var(--glass-strong)] focus:shadow-[0_0_0_1px_var(--primary),0_0_0_4px_var(--primary-soft)]" />
           </label>
         </form>
         <div className="ml-auto flex items-center gap-1 md:ml-0">
@@ -318,7 +320,7 @@ function MobileTabs({ onMore }: { onMore: () => void }) {
   const path = usePathname();
   const tabs = [MAIN_NAV[0], MAIN_NAV[1], null, MAIN_NAV[3]] as (NavItem | null)[];
   return (
-    <nav aria-label="Quick navigation" className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface/95 backdrop-blur-md safe-bottom lg:hidden">
+    <nav aria-label="Quick navigation" className="glass-bar fixed inset-x-0 bottom-0 z-40 border-t border-line safe-bottom lg:hidden">
       <ul className="mx-auto grid h-16 max-w-md grid-cols-5 items-center">
         {tabs.map((t, i) => t === null ? (
           <li key="add" className="flex justify-center">

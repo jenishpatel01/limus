@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { Orbs } from "@/components/brand/Backdrops";
 import { useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight, BookOpen, Check, FlaskConical, Gauge } from "lucide-react";
 import { useData } from "@/lib/data/store";
@@ -107,9 +108,10 @@ function OnboardingFlow() {
 
 
   return (
-    <div className="min-h-dvh bg-subtle">
-      <header className="flex items-center justify-between px-5 py-5 sm:px-10"><Logo href={null} /><span className="text-[13px] text-muted">Step {step + 1} of {STEPS.length}</span></header>
-      <main className="mx-auto max-w-xl px-5 pb-16">
+    <div className="relative min-h-dvh overflow-hidden bg-subtle">
+      <Orbs variant={2} fixed />
+      <header className="relative z-10 flex items-center justify-between px-5 py-5 sm:px-10"><Logo href={null} /><span className="text-[13px] text-muted">Step {step + 1} of {STEPS.length}</span></header>
+      <main className="relative z-10 mx-auto max-w-xl px-5 pb-16">
         <ol className="mb-8 flex gap-2" aria-label="Progress">
           {STEPS.map((s, i) => (
             <li key={s} className="flex-1">
@@ -119,7 +121,7 @@ function OnboardingFlow() {
           ))}
         </ol>
 
-        <div className="rounded-xl bg-surface p-6 shadow-[0_0_0_1px_var(--line),var(--shadow-card)] sm:p-8 animate-rise" key={step}>
+        <div className="glass rounded-xl p-6 sm:p-8 animate-rise" key={step}>
           {error && <Notice tone="loss" className="mb-5">{error}</Notice>}
 
           {step === 0 && (
@@ -145,7 +147,7 @@ function OnboardingFlow() {
               {realAccount ? (
                 <Notice className="mt-6">You already created <strong className="font-medium text-ink">{realAccount.name}</strong>. Continue to the next step.</Notice>
               ) : (
-                <div className="mt-7 grid gap-4 sm:grid-cols-2">
+                <div className="mt-7 grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <Field label="Account name" htmlFor="ob-an" className="sm:col-span-2"><Input id="ob-an" value={acc.name} maxLength={80} onChange={(e) => setAcc({ ...acc, name: e.target.value })} /></Field>
                   <Field label="Broker / exchange" htmlFor="ob-br" optional><Input id="ob-br" value={acc.broker} maxLength={80} onChange={(e) => setAcc({ ...acc, broker: e.target.value })} placeholder="e.g. IC Markets" /></Field>
                   <Field label="Account type" htmlFor="ob-at">
@@ -168,7 +170,7 @@ function OnboardingFlow() {
                 <Field label="What do you trade?">
                   <ChipGroup options={ASSET_CLASSES.map((c) => ({ value: c, label: ASSET_CLASS_LABEL[c] }))} value={classes} onChange={setClasses} />
                 </Field>
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <Field label="Default risk per trade" htmlFor="ob-risk" error={!(riskNum > 0 && riskNum <= 100) ? "Between 0 and 100%" : null}>
                     <Input id="ob-risk" type="number" inputMode="decimal" step="0.05" min={0.01} max={100} value={risk} onChange={(e) => setRisk(e.target.value)} suffix="%" />
                   </Field>

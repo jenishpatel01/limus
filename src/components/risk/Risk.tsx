@@ -84,7 +84,7 @@ export function RiskPage() {
         </div>
       )}
 
-      <div className="stagger mb-8 grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
+      <div className="stagger mb-8 grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
         <PositionSizeCalc key={`ps-${account?.id}`} currency={cur} balance={balanceDefault} defaultRisk={profile?.default_risk_pct ?? 1} />
         <RiskPercentCalc key={`rp-${account?.id}`} currency={cur} balance={balanceDefault} />
         <RewardRiskCalc />
@@ -282,7 +282,7 @@ function RiskMonitor() {
           <Card key={a.id}>
             <CardHeader title={<span className="flex items-center gap-2">{a.name}{a.is_demo && <Badge tone="warn">Demo</Badge>}</span>} subtitle={`Balance ${money(s.balance, a.currency)} · equity ${money(s.equity, a.currency)}`}
               action={dl?.breached ? <Badge tone="loss">Daily limit reached</Badge> : undefined} />
-            <div className="grid gap-6 p-5 md:grid-cols-2 xl:grid-cols-4">
+            <div className="grid grid-cols-1 gap-6 p-5 md:grid-cols-2 xl:grid-cols-4">
               <Meter label={`Daily loss limit${dlPct ? ` (${dlPct}%)` : ""}`} used={dl ? dl.usedPct : null}
                 text={dl ? <>Today {money(todayPnl, a.currency, { sign: true })} · {money(dl.remaining, a.currency)} left of {money(dl.limitAmount, a.currency)}</> : <>Today {money(todayPnl, a.currency, { sign: true })}. Set a limit below or on the account.</>} />
               <Meter label={`Max drawdown${ddLimit ? ` (${ddLimit}%)` : ""}`} used={ddLimit ? (s.drawdown.currentDrawdownPct / ddLimit) * 100 : null}
@@ -323,7 +323,7 @@ function RiskSettings({ profile, onSave }: { profile: NonNullable<ReturnType<typ
   return (
     <Card className="mt-6">
       <CardHeader title="Risk preferences" subtitle="Defaults for every account. Account-level limits override them." />
-      <div className="grid gap-4 p-5 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 p-5 sm:grid-cols-2 lg:grid-cols-4">
         <Field label="Default risk per trade" htmlFor="rs-risk" error={ok(risk, true) ? null : "0–100%"}><Input id="rs-risk" type="number" step="0.05" value={risk} onChange={(e) => setRisk(e.target.value)} suffix="%" /></Field>
         <Field label="Daily loss limit" htmlFor="rs-daily" optional error={ok(daily) ? null : "0–100%"}><Input id="rs-daily" type="number" step="0.1" value={daily} onChange={(e) => setDaily(e.target.value)} suffix="%" /></Field>
         <Field label="Max drawdown" htmlFor="rs-dd" optional error={ok(dd) ? null : "0–100%"}><Input id="rs-dd" type="number" step="0.5" value={dd} onChange={(e) => setDd(e.target.value)} suffix="%" /></Field>

@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import { Logo, LogoMark } from "@/components/brand/Logo";
 import { PixelMosaic } from "@/components/brand/PixelMosaic";
+import { FlowPath, GridDrift, HeroBackdrop, Orbs, PulseRings, StripChart, WidgetTape } from "@/components/brand/Backdrops";
 import { ThemeToggle } from "@/components/brand/ThemeToggle";
 import {
   CountUp, Divider, FadeIn, GrowBar, MaskText, Parallax, Reveal, ScrollFadeOut, ScrollLitText, ScrollProgress, ScrollTiltIn, Stagger, Tilt, Words,
@@ -18,8 +19,8 @@ export const metadata: Metadata = {
 // Everything below uses theme tokens (text-ink, bg-surface, border-line…), so the page follows
 // light and dark mode: dark text on light backgrounds, white text on dark backgrounds.
 const btnPrimary = "inline-flex h-10 items-center gap-1.5 rounded-md bg-primary px-4 font-button text-[14px] font-semibold tracking-[-0.015em] text-white shadow-btn transition-[background-color,transform] duration-200 hover:bg-primary-hover active:scale-[0.97]";
-const btnSecondary = "inline-flex h-10 items-center gap-1.5 rounded-md bg-surface px-4 text-[14px] font-medium text-ink shadow-[0_0_0_1px_var(--line-strong),var(--shadow-btn)] transition-[background-color,transform] duration-200 hover:bg-subtle active:scale-[0.97]";
-const panel = "bg-surface shadow-[0_0_0_1px_var(--line),0_10px_26px_-4.5px_rgba(0,0,0,0.08)]";
+const btnSecondary = "glass inline-flex h-10 items-center gap-1.5 rounded-md px-4 text-[14px] font-medium text-ink transition-transform duration-200 hover:-translate-y-px active:scale-[0.97]";
+const panel = "glass";
 
 /** Seconds until the intro cover has wiped away; hero animations start just before that. */
 const INTRO = 1.2;
@@ -34,7 +35,7 @@ export default function Home() {
         <Hero />
         <Markets />
         <HowItWorks />
-        <div className="mx-auto max-w-[1400px] px-4 pb-16 sm:px-8 lg:px-[52px]"><Divider /></div>
+        <div className="pb-16"><WidgetTape seed={3} className="mb-12" /><div className="mx-auto max-w-[1400px] px-4 sm:px-8 lg:px-[52px]"><Divider /></div></div>
         <ProductPreview />
         <Statement />
         <SpeedSection />
@@ -62,7 +63,7 @@ function PageIntro() {
 
 function Nav() {
   return (
-    <header className="nav-in sticky top-0 z-40 border-b border-line bg-bg/80 backdrop-blur-md">
+    <header className="nav-in glass-bar sticky top-0 z-40 border-b border-line">
         <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between px-4 sm:px-8 lg:px-[52px]">
           <Logo />
           <nav aria-label="Primary" className="hidden items-center gap-8 text-[14px] text-ink md:flex">
@@ -86,13 +87,12 @@ function Nav() {
 function Hero() {
   return (
     <section className="relative overflow-hidden">
-      <div aria-hidden className="float-slower pointer-events-none absolute right-[8%] top-24 size-[420px] rounded-full bg-primary-soft opacity-70 blur-[110px]" />
-      <div aria-hidden className="float-slow pointer-events-none absolute -left-40 top-64 size-[320px] rounded-full bg-primary-soft opacity-40 blur-[100px]" />
-      <div className="relative mx-auto grid max-w-[1400px] items-center gap-12 px-4 pb-20 pt-14 sm:px-8 lg:grid-cols-[minmax(0,560px)_1fr] lg:px-[52px] lg:pb-28 lg:pt-24">
+      <HeroBackdrop />
+      <div className="relative mx-auto grid grid-cols-1 max-w-[1400px] items-center gap-12 px-4 pb-20 pt-14 sm:px-8 lg:grid-cols-[minmax(0,560px)_1fr] lg:px-[52px] lg:pb-28 lg:pt-24">
         <ScrollFadeOut className="relative z-10">
-          <FadeIn delay={INTRO}><a href="#features" className="inline-flex items-center overflow-hidden rounded-md text-[12px] shadow-[0_0_0_1px_var(--line)] transition-shadow hover:shadow-[0_0_0_1px_var(--line-strong)]">
-            <span className="bg-surface px-2.5 py-1.5 font-medium text-ink">Journal · Portfolio · Analytics</span>
-            <span className="flex items-center gap-1 border-l border-line bg-subtle px-2.5 py-1.5 text-body">See features <ChevronDown className="size-3 -rotate-90" /></span>
+          <FadeIn delay={INTRO}><a href="#features" className="glass inline-flex items-center overflow-hidden rounded-md text-[12px]">
+            <span className="px-2.5 py-1.5 font-medium text-ink">Journal · Portfolio · Analytics</span>
+            <span className="flex items-center gap-1 border-l border-line bg-subtle/50 px-2.5 py-1.5 text-body">See features <ChevronDown className="size-3 -rotate-90" /></span>
           </a></FadeIn>
           <Words text={"Turn your trades\ninto decisions."} className="mt-7 text-[44px] font-medium leading-[1.02] tracking-[-0.045em] text-ink sm:text-[64px]" delay={INTRO + 0.1} />
           <FadeIn delay={INTRO + 0.55}><p className="mt-6 max-w-md text-[18px] font-medium leading-[1.5] tracking-[-0.02em] text-body">Log every trade, keep each account separate, and watch Limus show you exactly where your edge comes from.</p></FadeIn>
@@ -141,7 +141,7 @@ function HeroCollage() {
       </div>
       {/* Fades: left edge into the text column, bottom (extended past the box, where tilted cards overhang). */}
       <div className="pointer-events-none absolute inset-y-0 -left-8 w-1/3 bg-gradient-to-r from-bg/70 to-transparent" />
-      <div className="pointer-events-none absolute -bottom-56 -left-[20%] -right-[40%] h-[22rem] bg-gradient-to-t from-bg from-55% to-transparent" />
+      <div className="pointer-events-none absolute -bottom-56 -left-[20%] -right-[40%] h-[22rem] bg-gradient-to-t from-bg from-55% to-transparent [-webkit-mask-image:linear-gradient(90deg,transparent,#000_35%)] [mask-image:linear-gradient(90deg,transparent,#000_35%)]" />
     </div>
   );
 }
@@ -163,7 +163,7 @@ function SectionHead({ eyebrow, title, sub, center = true }: { eyebrow: string; 
 function Markets() {
   const items = ["Forex", "Crypto", "Stocks", "Indices", "Commodities"];
   return (
-    <section className="border-y border-line bg-subtle">
+    <section className="glass-bar border-y border-line">
       <div className="mx-auto flex max-w-[1400px] flex-col items-center gap-6 px-4 py-12 sm:px-8 md:flex-row md:justify-between lg:px-[52px]">
         <Reveal><p className="max-w-xs text-center text-[16px] font-medium leading-snug tracking-[-0.02em] text-body md:text-left"><span className="text-ink">Built for every market</span> you trade, with correct contract math for each.</p></Reveal>
         <div className="relative w-full overflow-hidden md:max-w-[640px] [mask-image:linear-gradient(90deg,transparent,#000_12%,#000_88%,transparent)]">
@@ -183,20 +183,25 @@ function HowItWorks() {
     { icon: Sparkles, t: "Improve.", d: "See which setups, sessions and habits make or lose money, and adjust your plan." },
   ];
   return (
-    <section id="how" className="scroll-mt-20 py-24 lg:py-32">
-      <div className="mx-auto max-w-[1400px] px-4 sm:px-8 lg:px-[52px]">
+    <section id="how" className="relative scroll-mt-20 overflow-hidden py-24 lg:py-32">
+      <Orbs variant={1} />
+      <GridDrift />
+      <div className="relative z-10 mx-auto max-w-[1400px] px-4 sm:px-8 lg:px-[52px]">
         <SectionHead eyebrow="How it works" title={["From trade to insight", "in 3 simple steps."]} />
-        <Stagger className="mt-16 grid gap-10 md:grid-cols-3 md:gap-0" gap={0.18} y={48}>
+        <div className="relative mt-16">
+        <FlowPath />
+        <Stagger className="relative z-10 grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-0" gap={0.18} y={48}>
           {steps.map((s, i) => (
             <div key={s.t} className={`group px-0 md:px-10 ${i > 0 ? "md:border-l md:border-line" : ""}`}>
               <div className="flex items-center justify-between">
                 <span className="flex size-11 items-center justify-center rounded-lg bg-surface text-ink shadow-[0_0_0_1px_var(--line)] transition-transform duration-500 group-hover:-translate-y-1 group-hover:rotate-[-6deg]"><s.icon className="size-5" strokeWidth={1.5} /></span>
-                <span className="text-[40px] font-medium tracking-[-0.05em] text-line-strong">0{i + 1}</span>
+                <span className="rounded-md bg-bg/60 px-2 text-[40px] font-medium tracking-[-0.05em] text-line-strong backdrop-blur-sm">0{i + 1}</span>
               </div>
               <p className="mt-6 text-[16px] font-medium leading-[1.5] tracking-[-0.02em] text-body"><span className="text-ink">{s.t}</span> {s.d}</p>
             </div>
           ))}
         </Stagger>
+        </div>
       </div>
     </section>
   );
@@ -205,10 +210,11 @@ function HowItWorks() {
 function ProductPreview() {
   const stats: [string, string, string][] = [["Net profit", "+$6,482.20", "text-profit"], ["Win rate", "54.2%", "text-ink"], ["Profit factor", "1.86", "text-ink"], ["Max drawdown", "6.4%", "text-loss"]];
   return (
-    <section className="pb-24 lg:pb-32">
-      <div className="mx-auto max-w-[1400px] px-4 sm:px-8 lg:px-[52px]">
+    <section className="relative overflow-hidden pb-24 lg:pb-32">
+      <Orbs variant={2} />
+      <div className="relative z-10 mx-auto max-w-[1400px] px-4 sm:px-8 lg:px-[52px]">
         <ScrollTiltIn><div className={`overflow-hidden rounded-2xl ${panel}`}>
-          <div className="grid lg:grid-cols-[230px_1fr]">
+          <div className="grid grid-cols-1 lg:grid-cols-[230px_1fr]">
             <aside className="hidden border-r border-line p-4 lg:block">
               <div className="flex items-center gap-2.5 rounded-lg px-2 py-2"><span className="flex size-8 items-center justify-center rounded-full bg-navy text-[12px] text-white">AM</span><span><span className="block text-[13px] font-medium text-ink">Alex Morgan</span><span className="block text-[11.5px] text-muted">Sample account</span></span></div>
               <ul className="mt-4 space-y-0.5 text-[13.5px] text-ink-3">
@@ -243,8 +249,10 @@ function ProductPreview() {
 
 function Statement() {
   return (
-    <section className="border-y border-line bg-black py-28 text-white lg:py-36">
-      <div className="mx-auto max-w-[760px] px-6">
+    <section className="relative overflow-hidden border-y border-line bg-black py-28 text-white lg:py-36">
+      <StripChart kind="candles" tone="light" seed={21} height={180} points={36} seconds={120} className="absolute inset-x-0 top-6 opacity-[.18]" />
+      <StripChart kind="area" tone="light" seed={22} height={240} points={34} seconds={85} reverse className="absolute inset-x-0 bottom-0 opacity-30" />
+      <div className="relative z-10 mx-auto max-w-[760px] px-6">
         <ScrollLitText className="text-[24px] font-medium leading-[1.3] tracking-[-0.035em] sm:text-[32px]" dim="#2e2e2e" lit="#ffffff" paragraphs={[
           { text: "A trade isn't just a number. It's a decision." },
           { text: "Limus keeps the numbers honest and the context attached: the setup, the emotions, the mistakes, the lesson. So every trade teaches you something.", accent: "#adadad" },
@@ -262,8 +270,10 @@ function SpeedSection() {
     { icon: ShieldCheck, t: "Built-in discipline.", d: "Daily loss limits, drawdown tracking and risk-per-trade alerts." },
   ];
   return (
-    <section className="overflow-hidden py-24 lg:py-32">
-      <div className="mx-auto grid max-w-[1400px] items-center gap-14 px-4 sm:px-8 lg:grid-cols-[minmax(0,480px)_1fr] lg:px-[52px]">
+    <section className="relative overflow-hidden py-24 lg:py-32">
+      <Orbs variant={0} />
+      <StripChart kind="bars" seed={30} height={160} points={44} seconds={110} className="absolute inset-x-0 bottom-0 opacity-30" />
+      <div className="relative z-10 mx-auto grid grid-cols-1 max-w-[1400px] items-center gap-14 px-4 sm:px-8 lg:grid-cols-[minmax(0,480px)_1fr] lg:px-[52px]">
         <div>
           <Reveal y={16}><p className="text-[14px] font-medium text-primary-text">Precision meets discipline</p></Reveal>
           <MaskText lines={["Spreadsheets take hours.", "Limus takes seconds.", ["Focus on trading, not formulas.", "text-muted"]]} className="mt-3 text-[30px] font-medium leading-[1.15] tracking-[-0.04em] text-ink sm:text-[36px]" />
@@ -311,12 +321,14 @@ function Features() {
     { icon: Upload, t: "CSV import", d: "Map columns, validate every row and skip duplicates automatically." },
   ];
   return (
-    <section id="features" className="scroll-mt-20 border-t border-line bg-subtle py-24 lg:py-32">
-      <div className="mx-auto max-w-[1400px] px-4 sm:px-8 lg:px-[52px]">
+    <section id="features" className="relative scroll-mt-20 overflow-hidden border-t border-line bg-subtle py-24 lg:py-32">
+      <Orbs variant={2} />
+      <GridDrift />
+      <div className="relative z-10 mx-auto max-w-[1400px] px-4 sm:px-8 lg:px-[52px]">
         <SectionHead eyebrow="Features" title={["Everything you need to", "trade with clarity."]} sub="From your first trade to a full performance review, Limus gives you professional tools without the spreadsheet." />
-        <Stagger className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" gap={0.09} y={56} itemClassName="h-full">
+        <Stagger className="mt-16 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4" gap={0.09} y={56} itemClassName="h-full">
           {items.map((f) => (
-            <div key={f.t} className="lift group h-full rounded-xl bg-surface p-6 shadow-[0_0_0_1px_var(--line)]">
+            <div key={f.t} className="glass lift group h-full rounded-xl p-6">
               <span className="flex size-11 items-center justify-center rounded-lg bg-primary-soft text-primary-text transition-transform duration-500 group-hover:scale-110 group-hover:rotate-[-6deg]"><f.icon className="size-5" strokeWidth={1.5} /></span>
               <p className="mt-6 text-[16px] font-medium tracking-[-0.02em] text-ink">{f.t}</p>
               <p className="mt-1.5 text-[14px] font-medium leading-[1.5] text-muted">{f.d}</p>
@@ -336,12 +348,14 @@ function Security() {
     { icon: ShieldCheck, t: "No investment advice", d: "Limus records and analyses. It never places trades or tells you what to buy." },
   ];
   return (
-    <section id="security" className="scroll-mt-20 py-24 lg:py-32">
-      <div className="mx-auto max-w-[1400px] px-4 sm:px-8 lg:px-[52px]">
+    <section id="security" className="relative scroll-mt-20 overflow-hidden py-24 lg:py-32">
+      <Orbs variant={1} />
+      <PulseRings className="-top-36 left-1/2 size-[640px] -translate-x-1/2" />
+      <div className="relative z-10 mx-auto max-w-[1400px] px-4 sm:px-8 lg:px-[52px]">
         <SectionHead eyebrow="Security" title={["Your trades stay yours."]} sub="Your trading history is sensitive. Limus is built so that nobody else can see it." />
-        <Stagger className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" gap={0.1} y={40} itemClassName="h-full">
+        <Stagger className="mt-16 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4" gap={0.1} y={40} itemClassName="h-full">
           {items.map((s) => (
-            <div key={s.t} className="lift h-full rounded-xl bg-surface p-6 shadow-[0_0_0_1px_var(--line)]">
+            <div key={s.t} className="glass lift h-full rounded-xl p-6">
               <p className="flex items-center gap-2 text-[14px] font-medium text-ink"><s.icon className="size-4 text-primary-text" strokeWidth={1.5} />{s.t}</p>
               <p className="mt-2 text-[13px] font-medium leading-[1.5] text-muted">{s.d}</p>
             </div>
@@ -362,8 +376,10 @@ function Faq() {
     ["Does it work on my phone?", "Limus is a progressive web app. Add it to your home screen for a full-screen, app-like experience on iOS and Android."],
   ];
   return (
-    <section id="faq" className="scroll-mt-20 border-t border-line py-24 lg:py-32">
-      <div className="mx-auto grid max-w-[1400px] gap-12 px-4 sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:px-[52px]">
+    <section id="faq" className="relative scroll-mt-20 overflow-hidden border-t border-line py-24 lg:py-32">
+      <Orbs variant={0} />
+      <StripChart kind="line" seed={40} height={170} points={40} seconds={75} ticks className="absolute inset-x-0 bottom-0 opacity-50" />
+      <div className="relative z-10 mx-auto grid grid-cols-1 max-w-[1400px] gap-12 px-4 sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:px-[52px]">
         <div>
           <MaskText lines={["Frequently", "asked questions."]} className="text-[34px] font-medium leading-[1.08] tracking-[-0.04em] text-ink sm:text-[46px]" />
           <Reveal delay={0.2}>
@@ -373,7 +389,7 @@ function Faq() {
         </div>
         <Stagger className="space-y-3" gap={0.1} y={32}>
           {qs.map(([q, a]) => (
-            <details key={q} className="group rounded-xl bg-surface shadow-[0_0_0_1px_var(--line)] transition-shadow hover:shadow-[0_0_0_1px_var(--line-strong)] [&_summary::-webkit-details-marker]:hidden">
+            <details key={q} className="glass group rounded-xl [&_summary::-webkit-details-marker]:hidden">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 text-[15px] font-medium tracking-[-0.02em] text-ink">{q}<ChevronDown className="size-4 shrink-0 text-muted transition-transform duration-300 group-open:rotate-180" /></summary>
               <p className="faq-answer px-5 pb-5 text-[14px] font-medium leading-[1.6] text-body">{a}</p>
             </details>
@@ -406,8 +422,9 @@ function Cta() {
 
 function Footer() {
   return (
-    <footer className="border-t border-line bg-[#111111] text-white">
-      <div className="mx-auto max-w-[1400px] px-4 py-14 sm:px-8 lg:px-[52px]">
+    <footer className="relative overflow-hidden border-t border-line bg-[#111111] text-white">
+      <StripChart kind="line" tone="light" seed={50} height={120} points={36} seconds={80} reverse className="absolute inset-x-0 top-0 opacity-30" />
+      <div className="relative z-10 mx-auto max-w-[1400px] px-4 py-14 sm:px-8 lg:px-[52px]">
         <Reveal y={24}>
           <div className="flex flex-wrap items-center justify-between gap-6 border-b border-white/10 pb-10">
             <Logo inverted href="/" />

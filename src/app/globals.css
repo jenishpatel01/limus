@@ -193,9 +193,79 @@
 }
 [data-theme="dark"] .app-ambient { opacity: .7; }
 
-/* Card surface: fine border + whisper of top highlight for layered depth. */
-.surface-card { background: var(--surface); box-shadow: 0 0 0 1px var(--line), inset 0 1px 0 rgba(255,255,255,.7), var(--shadow-card); }
-[data-theme="dark"] .surface-card:not([data-theme="light"] *) { box-shadow: 0 0 0 1px var(--line), inset 0 1px 0 rgba(255,255,255,.04), var(--shadow-card); }
+/* ───────── Glass ─────────
+   Frosted panels: translucent fill, backdrop blur, a bright top edge and a soft inner rim.
+   Glass only reads against colour, so pages carry drifting orbs behind it (.orb, see Orbs in
+   components/brand/Backdrops.tsx). In the components layer so utility classes (sticky, absolute,
+   shadow-*, bg-*) still override it. */
+:root, [data-theme="light"] {
+  --glass-bg: rgba(255, 255, 255, .55);
+  --glass-sheen: rgba(255, 255, 255, .65);
+  --glass-strong: rgba(255, 255, 255, .84);
+  --glass-bar: rgba(255, 255, 255, .62);
+  --glass-input: rgba(255, 255, 255, .7);
+  --glass-rim: rgba(255, 255, 255, .85);
+  --glass-edge: rgba(24, 32, 80, .08);
+  --glass-hi: rgba(255, 255, 255, .95);
+  --glass-shadow: 0 10px 34px -12px rgba(30, 45, 120, .18), 0 2px 8px -4px rgba(30, 45, 120, .08);
+  --glass-blur: 18px;
+  --glass-sat: 1.7;
+  --orb-1: rgba(18, 78, 235, .30);
+  --orb-2: rgba(34, 211, 238, .26);
+  --orb-3: rgba(139, 92, 246, .24);
+}
+[data-theme="dark"] {
+  --glass-bg: rgba(255, 255, 255, .05);
+  --glass-sheen: rgba(255, 255, 255, .09);
+  --glass-strong: rgba(22, 24, 32, .78);
+  --glass-bar: rgba(10, 10, 14, .6);
+  --glass-input: rgba(255, 255, 255, .06);
+  --glass-rim: rgba(255, 255, 255, .1);
+  --glass-edge: rgba(0, 0, 0, .5);
+  --glass-hi: rgba(255, 255, 255, .16);
+  --glass-shadow: 0 14px 40px -14px rgba(0, 0, 0, .7);
+  --orb-1: rgba(43, 98, 240, .42);
+  --orb-2: rgba(34, 211, 238, .24);
+  --orb-3: rgba(139, 92, 246, .34);
+}
+/* Phones and touch screens: lighter blur (it is expensive on mobile GPUs). */
+@media (max-width: 768px), (pointer: coarse) {
+  :root, [data-theme="light"], [data-theme="dark"] { --glass-blur: 10px; --glass-sat: 1.3; }
+}
+
+@layer components {
+  .glass, .surface-card {
+    position: relative;
+    background: linear-gradient(135deg, var(--glass-sheen) 0%, transparent 42%), var(--glass-bg);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+    box-shadow: 0 0 0 1px var(--glass-edge), inset 0 0 0 1px var(--glass-rim), inset 0 1px 0 var(--glass-hi), var(--glass-shadow);
+  }
+  .glass-strong {
+    background: linear-gradient(135deg, var(--glass-sheen) 0%, transparent 38%), var(--glass-strong);
+    -webkit-backdrop-filter: blur(28px) saturate(1.8);
+    backdrop-filter: blur(28px) saturate(1.8);
+    box-shadow: 0 0 0 1px var(--glass-edge), inset 0 0 0 1px var(--glass-rim), inset 0 1px 0 var(--glass-hi), 0 24px 60px -16px rgba(10, 20, 60, .35);
+  }
+  .glass-bar {
+    background: var(--glass-bar);
+    -webkit-backdrop-filter: blur(22px) saturate(1.8);
+    backdrop-filter: blur(22px) saturate(1.8);
+  }
+  /* Each glass panel is its own stacking context, so lift a panel above its neighbours while a menu
+     inside it is open or the pointer is over it (chart tooltips, dropdowns). */
+  .glass:hover, .surface-card:hover, .glass:focus-within, .surface-card:focus-within { z-index: 5; }
+  .glass:has([aria-expanded="true"]), .glass:has([role="menu"]), .surface-card:has([aria-expanded="true"]), .surface-card:has([role="menu"]) { z-index: 25; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .glass, .surface-card, .glass-strong, .glass-bar { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--surface); }
+}
+
+/* Soft colour orbs that drift behind glass. Radial gradients (no filter) so they stay cheap. */
+.orb { position: absolute; border-radius: 9999px; pointer-events: none; will-change: transform;
+  background: radial-gradient(circle at 50% 50%, var(--orb, var(--orb-1)) 0%, transparent 68%);
+  animation: orb-drift var(--od, 24s) ease-in-out var(--odl, 0s) infinite alternate; }
+@keyframes orb-drift { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(var(--dx, 70px), var(--dy, -50px), 0) scale(1.2); } }
 
 /* Table rows: soft hover wash with a primary accent bar. */
 .row-hover { position: relative; transition: background-color .18s ease; }
@@ -261,6 +331,21 @@
   .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
 }
 
+/* Landing backdrops (see components/brand/Backdrops.tsx). Transform/opacity only. */
+.bd-strip { display: block; max-width: none; will-change: transform; animation: bd-scroll 60s linear infinite; }
+@keyframes bd-scroll { to { transform: translateX(calc(var(--bd-w) * -1)); } }
+.bd-dash { animation: bd-dash 1.2s linear infinite; }
+@keyframes bd-dash { to { stroke-dashoffset: -14; } }
+.bd-comet { animation: bd-comet 5s cubic-bezier(.45, 0, .55, 1) infinite; stroke-dashoffset: 60; }
+.bd-comet-2 { animation-delay: -2.5s; }
+@keyframes bd-comet { from { stroke-dashoffset: 60; } to { stroke-dashoffset: -1400; } }
+.bd-ring { animation: bd-ring 6.4s cubic-bezier(.2, .6, .3, 1) var(--dl, 0s) infinite; }
+@keyframes bd-ring { from { transform: scale(.12); opacity: .75; } to { transform: scale(1); opacity: 0; } }
+.bd-grid { animation: bd-grid 9s linear infinite; will-change: transform; }
+@keyframes bd-grid { to { transform: translate(var(--bd-g), var(--bd-g)); } }
+.bd-scan { animation: bd-scan 8s cubic-bezier(.45, 0, .55, 1) infinite; transform: translateX(-120px); }
+@keyframes bd-scan { from { transform: translateX(-120px); } to { transform: translateX(100vw); } }
+
 /* Pixel mosaic (CTA band, auth screens): fast flashes, breathing squares, a light sweep and cursor flares. */
 @keyframes mz-flash { 0%, 100% { opacity: var(--o) } 40% { opacity: 1; fill: var(--primary-light) } 70% { opacity: calc(var(--o) * .6) } }
 @keyframes mz-soft { 0%, 100% { opacity: var(--o) } 50% { opacity: calc(var(--o) * 3.2) } }
@@ -304,7 +389,9 @@ details[open] > .faq-answer { animation: faq-in .45s cubic-bezier(.22, 1, .36, 1
 @media (prefers-reduced-motion: reduce) {
   .page-intro { display: none; }
   .mz-flash, .mz-soft, .mz-sweep, .twinkle { animation: none !important; }
-  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  .orb, .bd-strip, .bd-dash, .bd-comet, .bd-ring, .bd-grid, .bd-scan, .marquee, .float-slow, .float-slower, .live-dot, .ping::after { animation: none !important; }
+  .bd-scan { display: none; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
 
 /* Recharts defaults to match the theme */

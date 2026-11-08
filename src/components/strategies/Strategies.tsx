@@ -48,7 +48,7 @@ export function StrategiesPage() {
         <Card><EmptyState icon={<Layers />} title="No strategies yet" description="Write down your setups: entry and exit conditions, risk rules and the markets they're for. Then tag trades with them to see what works." action={<Button variant="primary" onClick={() => setModal("new")}>Create a strategy</Button>} /></Card>
       ) : (
         <>
-          <div className="stagger mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <div className="stagger mb-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
             {rows.map(({ s, st }) => (
               <Link key={s.id} href={`/app/strategies/${s.id}`} className="group">
                 <Card as="div" className="lift flex h-full flex-col p-5">
@@ -129,7 +129,7 @@ export function StrategyModal({ open, onClose, strategy }: { open: boolean; onCl
       <div className="grid gap-4">
         <Field label="Name" htmlFor="s-name"><Input id="s-name" maxLength={80} value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} placeholder="e.g. London Breakout" /></Field>
         <Field label="Description" htmlFor="s-desc" optional><Textarea id="s-desc" rows={2} maxLength={4000} value={f.description} onChange={(e) => setF({ ...f, description: e.target.value })} /></Field>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field label="Entry conditions" htmlFor="s-entry" optional><Textarea id="s-entry" rows={4} maxLength={4000} value={f.entry} onChange={(e) => setF({ ...f, entry: e.target.value })} placeholder="What must be true before you enter?" /></Field>
           <Field label="Exit conditions" htmlFor="s-exit" optional><Textarea id="s-exit" rows={4} maxLength={4000} value={f.exit} onChange={(e) => setF({ ...f, exit: e.target.value })} placeholder="Targets, trailing, time stops…" /></Field>
         </div>
@@ -182,13 +182,13 @@ export function StrategyDetail() {
         <StatCard label="Profit factor" value={ratio(st.profitFactor)} />
       </div>
 
-      <div className="mb-6 grid gap-4 lg:grid-cols-3">
+      <div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
         {[["Entry conditions", s.entry_conditions], ["Exit conditions", s.exit_conditions], ["Risk management", s.risk_rules]].map(([t, v]) => (
           <Card key={t} className="p-5"><h3 className="text-[14px] font-medium">{t}</h3><p className={cx("mt-2 whitespace-pre-wrap text-[13.5px] leading-relaxed", v ? "text-body" : "text-faint")}>{v || "Not written yet."}</p></Card>
         ))}
       </div>
 
-      <div className="mb-6 grid gap-4 lg:grid-cols-2">
+      <div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Card><CardHeader title="Cumulative P&L" subtitle="Closed trades with this strategy" /><div className="p-4 pt-3"><EquityChart data={curveToChart(curve.points, tz, "balance")} currency={currency} baseline={0} /></div></Card>
         <Card>
           <CardHeader title="Recent trades" />

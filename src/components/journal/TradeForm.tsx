@@ -87,12 +87,12 @@ export function TradeForm({ trade }: { trade?: Trade }) {
   }
 
   return (
-    <form onSubmit={submit} noValidate className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+    <form onSubmit={submit} noValidate className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
       <div className="stagger min-w-0 space-y-5">
         {error && <Notice tone="loss">{error}</Notice>}
 
         <Section title="Instrument" subtitle="What you traded and in which account.">
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field label="Account" htmlFor="tf-account" error={err("account_id")}>
               <Select id="tf-account" value={f.account_id} aria-invalid={Boolean(err("account_id"))} onChange={(e) => {
                 const a = accounts.find((x) => x.id === e.target.value);
@@ -124,7 +124,7 @@ export function TradeForm({ trade }: { trade?: Trade }) {
         </Section>
 
         <Section title="Execution" subtitle={`Prices in ${f.quote_currency || spec.quote}. Times in ${tz.replace(/_/g, " ")}.`}>
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field label="Entry date & time" htmlFor="tf-entry-at" error={err("entry_at")}>
               <Input id="tf-entry-at" type="datetime-local" value={f.entry_at} aria-invalid={Boolean(err("entry_at"))} onChange={(e) => set("entry_at", e.target.value)} />
             </Field>
@@ -173,7 +173,7 @@ export function TradeForm({ trade }: { trade?: Trade }) {
             <ChevronDown className={cx("size-4 text-muted transition-transform", showCosts && "rotate-180")} />
           </button>
           {showCosts && (
-            <div className="grid gap-4 border-t border-line px-5 py-5 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 border-t border-line px-5 py-5 sm:grid-cols-2">
               <Field label="Contract size" htmlFor="tf-cs" error={err("contract_size")} hint="Units per 1.0 quantity. Futures: tick value ÷ tick size (ES = 50).">
                 <Input id="tf-cs" type="number" inputMode="decimal" step="any" min={0} value={f.contract_size} onChange={(e) => set("contract_size", e.target.value)} />
               </Field>
@@ -215,7 +215,7 @@ export function TradeForm({ trade }: { trade?: Trade }) {
         </Card>
 
         <Section title="Strategy & context">
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field label="Strategy" htmlFor="tf-strat" optional>
               <Select id="tf-strat" value={f.strategy_id} onChange={(e) => set("strategy_id", e.target.value)}>
                 <option value="">No strategy</option>
@@ -244,7 +244,7 @@ export function TradeForm({ trade }: { trade?: Trade }) {
             <Field label="Post-trade analysis" htmlFor="tf-post" optional>
               <Textarea id="tf-post" maxLength={10000} value={f.post_trade_analysis} onChange={(e) => set("post_trade_analysis", e.target.value)} placeholder="How did it play out? Did you follow the plan?" />
             </Field>
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <Field label="Emotional state" htmlFor="tf-emo" optional>
                 <Select id="tf-emo" value={f.emotional_state} onChange={(e) => set("emotional_state", e.target.value)}>
                   <option value="">Not recorded</option>

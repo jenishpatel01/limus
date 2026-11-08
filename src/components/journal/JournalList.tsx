@@ -160,7 +160,7 @@ function TradeList({ initialQuery, focusSearch }: { initialQuery: string; focusS
 
       <Collapse open={showFilters}>
         <Card className="mb-4 p-4">
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
             <Select aria-label="Status" value={status} onChange={(e) => setStatus(e.target.value)}><option value="">Any status</option><option value="closed">Closed</option><option value="open">Open</option><option value="cancelled">Cancelled</option></Select>
             <Select aria-label="Direction" value={direction} onChange={(e) => setDirection(e.target.value)}><option value="">Buy &amp; sell</option><option value="long">Buy / long</option><option value="short">Sell / short</option></Select>
             <Select aria-label="Asset class" value={assetClass} onChange={(e) => setAssetClass(e.target.value)}><option value="">All asset classes</option>{ASSET_CLASSES.map((c) => <option key={c} value={c}>{ASSET_CLASS_LABEL[c]}</option>)}</Select>
