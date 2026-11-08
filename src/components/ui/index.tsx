@@ -247,7 +247,7 @@ export function Badge({ tone = "neutral", children, className, title }: { tone?:
 /** KPI tile modelled on the template's analytics cards (icon chip, label, value, delta). */
 export function StatCard({ icon, label, value, sub, tone, className, hint }: { icon?: ReactNode; label: string; value: ReactNode; sub?: ReactNode; tone?: "profit" | "loss" | null; className?: string; hint?: string }) {
   return (
-    <Card as="div" className={cx("flex min-w-0 flex-col gap-3 p-4 transition-shadow duration-300 hover:shadow-[0_0_0_1px_var(--line-strong),var(--shadow-pop)]", className)}>
+    <Card as="div" className={cx("lift flex min-w-0 flex-col gap-3 p-4", className)}>
       {icon && <span className="flex size-8 items-center justify-center rounded-md bg-subtle text-ink-3 shadow-[0_0_0_1px_var(--line)] [&_svg]:size-4">{icon}</span>}
       <div className="min-w-0">
         <p className="truncate text-[13px] text-muted" title={hint}>{label}</p>

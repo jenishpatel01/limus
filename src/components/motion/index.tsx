@@ -24,7 +24,7 @@ function withDelay(v: Variants, delay: number): Variants {
 }
 
 /** Fades content up when it scrolls into view. */
-export function Reveal({ children, delay = 0, y = 18, className, as = "div", once = true, amount = 0.25 }: {
+export function Reveal({ children, delay = 0, y = 40, className, as = "div", once = true, amount = 0.25 }: {
   children: ReactNode; delay?: number; y?: number; className?: string; as?: Tag; once?: boolean; amount?: number;
 }) {
   const { reduce, lite } = useMotionPrefs();
@@ -38,7 +38,7 @@ export function Reveal({ children, delay = 0, y = 18, className, as = "div", onc
 }
 
 /** Reveals each child in sequence as the group enters the viewport. */
-export function Stagger({ children, className, gap = 0.08, y = 16, amount = 0.15, as = "div", itemClassName }: {
+export function Stagger({ children, className, gap = 0.12, y = 36, amount = 0.15, as = "div", itemClassName }: {
   children: ReactNode; className?: string; gap?: number; y?: number; amount?: number; as?: Tag; itemClassName?: string;
 }) {
   const { reduce, lite } = useMotionPrefs();
@@ -75,9 +75,9 @@ export function Words({ text, className, delay = 0.1, as = "h1" }: { text: strin
             const idx = i++;
             return (
               <motion.span key={wi} className="inline-block whitespace-pre"
-                initial={reduce ? false : { opacity: 0, y: "0.35em", ...(lite ? {} : { filter: "blur(10px)" }) }}
-                animate={{ opacity: 1, y: 0, ...(lite ? {} : { filter: "blur(0px)" }) }}
-                transition={{ duration: DUR.long, ease: EASE, delay: delay + idx * 0.07 }}>
+                initial={reduce ? false : { opacity: 0, y: "0.8em", rotate: 2, ...(lite ? {} : { filter: "blur(14px)" }) }}
+                animate={{ opacity: 1, y: 0, rotate: 0, ...(lite ? {} : { filter: "blur(0px)" }) }}
+                transition={{ duration: DUR.long + 0.2, ease: EASE, delay: delay + idx * 0.11 }}>
                 {w}{wi < arr.length - 1 ? " " : ""}
               </motion.span>
             );
@@ -93,7 +93,7 @@ export function MaskText({ lines, className, as = "h2", delay = 0 }: { lines: st
   const { reduce } = useMotionPrefs();
   const M = motion[as];
   return (
-    <M className={className} aria-label={lines.join(" ")} initial={reduce ? false : "hidden"} whileInView="show" viewport={{ once: true, amount: 0.6 }} variants={stagger(0.09, delay)}>
+    <M className={className} aria-label={lines.join(" ")} initial={reduce ? false : "hidden"} whileInView="show" viewport={{ once: true, amount: 0.6 }} variants={stagger(0.14, delay)}>
       {lines.map((l, i) => (
         <span key={i} className="block overflow-hidden pb-[0.08em]" aria-hidden>
           <motion.span className="block" variants={maskLine}>{l}</motion.span>
@@ -104,7 +104,7 @@ export function MaskText({ lines, className, as = "h2", delay = 0 }: { lines: st
 }
 
 /** Appears on page load after a delay (hero badges, buttons). */
-export function FadeIn({ children, delay = 0, className, y = 12 }: { children: ReactNode; delay?: number; className?: string; y?: number }) {
+export function FadeIn({ children, delay = 0, className, y = 32 }: { children: ReactNode; delay?: number; className?: string; y?: number }) {
   const { reduce, lite } = useMotionPrefs();
   return (
     <motion.div className={className} initial={reduce ? false : "hidden"} animate="show" variants={withDelay(fadeUp(lite, y), delay)}>
@@ -128,9 +128,9 @@ export function ClipReveal({ children, className }: { children: ReactNode; class
   const { reduce, lite } = useMotionPrefs();
   return (
     <motion.div className={className}
-      initial={reduce ? false : { clipPath: lite ? "inset(0% 0% 0% 0% round 16px)" : "inset(12% 6% 12% 6% round 24px)", opacity: lite ? 0 : 1, scale: lite ? 1 : 1.03 }}
+      initial={reduce ? false : { clipPath: lite ? "inset(0% 0% 0% 0% round 16px)" : "inset(18% 10% 18% 10% round 32px)", opacity: lite ? 0 : 1, scale: lite ? 1 : 1.08 }}
       whileInView={{ clipPath: "inset(0% 0% 0% 0% round 16px)", opacity: 1, scale: 1 }}
-      viewport={{ once: true, amount: 0.25 }} transition={{ duration: 1.1, ease: EASE }}>
+      viewport={{ once: true, amount: 0.2 }} transition={{ duration: 1.5, ease: EASE }}>
       {children}
     </motion.div>
   );
@@ -154,7 +154,7 @@ export function ScrollProgress({ className }: { className?: string }) {
 }
 
 /** Tilts its content a few degrees towards the cursor (desktop pointers only). */
-export function Tilt({ children, className, max = 6 }: { children: ReactNode; className?: string; max?: number }) {
+export function Tilt({ children, className, max = 8 }: { children: ReactNode; className?: string; max?: number }) {
   const { lite } = useMotionPrefs();
   const mx = useMotionValue(0), my = useMotionValue(0);
   const rx = useSpring(useTransform(my, [-0.5, 0.5], [max, -max]), { stiffness: 120, damping: 20 });
@@ -233,7 +233,7 @@ export function CountUp({ value, duration = DUR.count }: { value: string | numbe
 }
 
 /** Subtle parallax drift while scrolling (disabled in lite mode). */
-export function Parallax({ children, className, distance = 60 }: { children: ReactNode; className?: string; distance?: number }) {
+export function Parallax({ children, className, distance = 90 }: { children: ReactNode; className?: string; distance?: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const { lite } = useMotionPrefs();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
@@ -261,7 +261,7 @@ export function Collapse({ open, children, className }: { open: boolean; childre
 export const listVariants = stagger(0.035);
 export function useListItem() {
   const { reduce, lite } = useMotionPrefs();
-  return { variants: fadeUp(lite, 8), reduce };
+  return { variants: fadeUp(lite, 18), reduce };
 }
 
 export { fade, scaleIn };

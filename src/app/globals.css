@@ -146,7 +146,7 @@
 }
 
 @keyframes fade-in { from { opacity: 0 } to { opacity: 1 } }
-@keyframes rise-blur { from { opacity: 0; transform: translateY(14px); filter: blur(6px) } to { opacity: 1; transform: none; filter: blur(0) } }
+@keyframes rise-blur { from { opacity: 0; transform: translateY(36px) scale(.97); filter: blur(10px) } to { opacity: 1; transform: none; filter: blur(0) } }
 @keyframes float { 0%, 100% { transform: translateY(0) } 50% { transform: translateY(-10px) } }
 @keyframes marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }
 @keyframes draw { from { stroke-dashoffset: var(--len, 1200) } to { stroke-dashoffset: 0 } }
@@ -154,13 +154,13 @@
 @keyframes twinkle { 0%, 100% { opacity: var(--o) } 50% { opacity: calc(var(--o) * .35) } }
 
 /* Staggered entrance for direct children (dashboard grids, lists). */
-.stagger > * { animation: rise-blur .6s cubic-bezier(.22, 1, .36, 1) both; }
-.stagger > *:nth-child(1) { animation-delay: .03s } .stagger > *:nth-child(2) { animation-delay: .08s }
-.stagger > *:nth-child(3) { animation-delay: .13s } .stagger > *:nth-child(4) { animation-delay: .18s }
-.stagger > *:nth-child(5) { animation-delay: .23s } .stagger > *:nth-child(6) { animation-delay: .28s }
-.stagger > *:nth-child(7) { animation-delay: .33s } .stagger > *:nth-child(8) { animation-delay: .38s }
-.stagger > *:nth-child(n+9) { animation-delay: .42s }
-.page-enter { animation: rise-blur .5s cubic-bezier(.22, 1, .36, 1) both; }
+.stagger > * { animation: rise-blur 1s cubic-bezier(.22, 1, .36, 1) both; }
+.stagger > *:nth-child(1) { animation-delay: .05s } .stagger > *:nth-child(2) { animation-delay: .15s }
+.stagger > *:nth-child(3) { animation-delay: .25s } .stagger > *:nth-child(4) { animation-delay: .35s }
+.stagger > *:nth-child(5) { animation-delay: .45s } .stagger > *:nth-child(6) { animation-delay: .55s }
+.stagger > *:nth-child(7) { animation-delay: .65s } .stagger > *:nth-child(8) { animation-delay: .75s }
+.stagger > *:nth-child(n+9) { animation-delay: .85s }
+.page-enter { animation: rise-blur .8s cubic-bezier(.22, 1, .36, 1) both; }
 .float-slow { animation: float 7s ease-in-out infinite; }
 .float-slower { animation: float 9s ease-in-out infinite; animation-delay: -3s; }
 .marquee { animation: marquee 28s linear infinite; }
@@ -169,10 +169,12 @@
 .live-dot { animation: pulse-dot 1.8s ease-in-out infinite; }
 .twinkle { animation: twinkle 4s ease-in-out infinite; }
 .lift { transition: transform .3s cubic-bezier(.22, 1, .36, 1), box-shadow .3s ease; will-change: transform; }
-.lift:hover { transform: translateY(-3px); box-shadow: 0 0 0 1px var(--line-strong), var(--shadow-pop); }
+.lift:hover { transform: translateY(-6px); box-shadow: 0 0 0 1px var(--line-strong), var(--shadow-pop); }
 
 /* Ambient light behind app pages: a faint primary wash and dot grid that fade out downward. */
+@keyframes ambient-drift { 0%, 100% { background-position: 0% 0%, 0% 0% } 50% { background-position: -18% 12%, 22% 8% } }
 .app-ambient { position: absolute; inset: 0 0 auto 0; height: 520px; pointer-events: none; z-index: 0;
+  background-size: 140% 140%, 140% 140%; animation: ambient-drift 16s ease-in-out infinite;
   background:
     radial-gradient(60% 70% at 85% -10%, color-mix(in oklab, var(--primary-soft) 70%, transparent), transparent 70%),
     radial-gradient(40% 50% at 10% -20%, color-mix(in oklab, var(--primary-soft) 45%, transparent), transparent 70%);
@@ -197,14 +199,15 @@
 .row-hover:hover > :first-child::before { transform: scaleY(1); }
 
 /* Table rows fade in one after another (opacity only, so no layout cost). */
-.rows-in > tr { animation: fade-in .45s ease-out both; }
-.rows-in > tr:nth-child(2) { animation-delay: .03s } .rows-in > tr:nth-child(3) { animation-delay: .06s }
-.rows-in > tr:nth-child(4) { animation-delay: .09s } .rows-in > tr:nth-child(5) { animation-delay: .12s }
-.rows-in > tr:nth-child(6) { animation-delay: .15s } .rows-in > tr:nth-child(7) { animation-delay: .18s }
-.rows-in > tr:nth-child(8) { animation-delay: .21s } .rows-in > tr:nth-child(n+9) { animation-delay: .24s }
+@keyframes row-in { from { opacity: 0; transform: translateX(-14px) } to { opacity: 1; transform: none } }
+.rows-in > tr { animation: row-in .6s cubic-bezier(.22, 1, .36, 1) both; }
+.rows-in > tr:nth-child(2) { animation-delay: .05s } .rows-in > tr:nth-child(3) { animation-delay: .1s }
+.rows-in > tr:nth-child(4) { animation-delay: .15s } .rows-in > tr:nth-child(5) { animation-delay: .2s }
+.rows-in > tr:nth-child(6) { animation-delay: .25s } .rows-in > tr:nth-child(7) { animation-delay: .3s }
+.rows-in > tr:nth-child(8) { animation-delay: .35s } .rows-in > tr:nth-child(n+9) { animation-delay: .4s }
 
 /* Heatmap cells: staggered fade, gentle lift on hover. */
-.heat-cell { animation: fade-in .5s ease-out both; transition: transform .2s cubic-bezier(.22, 1, .36, 1), box-shadow .2s ease; }
+.heat-cell { animation: rise .6s cubic-bezier(.22, 1, .36, 1) both; transition: transform .2s cubic-bezier(.22, 1, .36, 1), box-shadow .2s ease; }
 .heat-cell:hover { transform: scale(1.07); box-shadow: 0 0 0 1px var(--line-strong), var(--shadow-pop); position: relative; z-index: 1; }
 
 /* Notification dot with a soft pulse ring. */
@@ -216,7 +219,7 @@
 @media (max-width: 768px), (pointer: coarse) {
   .stagger > *, .page-enter { animation-name: rise; }
 }
-@keyframes rise { from { opacity: 0; transform: translateY(6px) } to { opacity: 1; transform: none } }
+@keyframes rise { from { opacity: 0; transform: translateY(18px) } to { opacity: 1; transform: none } }
 @keyframes shimmer { from { background-position: -200% 0 } to { background-position: 200% 0 } }
 
 @layer base {

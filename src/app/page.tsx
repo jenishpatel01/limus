@@ -285,7 +285,7 @@ function Features() {
     <section id="features" className="scroll-mt-20 border-t border-[#e5e7eb] bg-[#f9fafb] py-24 lg:py-32">
       <div className="mx-auto max-w-[1400px] px-4 sm:px-8 lg:px-[52px]">
         <Reveal><SectionHead eyebrow="Features" title={<>Everything you need to<br className="hidden sm:block" /> trade with clarity.</>} sub="From your first trade to a full performance review, Limus gives you professional tools without the spreadsheet." /></Reveal>
-        <Stagger className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" gap={0.06}>
+        <Stagger className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" gap={0.1}>
           {items.map((f) => (
             <div key={f.t} className="lift h-full rounded-xl bg-white p-6 shadow-[0_0_0_1px_#e5e7eb]">
               <f.icon className="size-6" strokeWidth={1.5} />
@@ -340,7 +340,7 @@ function Faq() {
           <p className="mt-5 text-[16px] font-medium text-[#616161]">Have another question?</p>
           <Link href="/register" className="mt-2 inline-flex items-center gap-1 text-[14px] font-medium">Try it with the demo account <ArrowRight className="size-3.5" /></Link>
         </Reveal>
-        <Stagger className="space-y-3" gap={0.07}>
+        <Stagger className="space-y-3" gap={0.1}>
           {qs.map(([q, a]) => (
             <details key={q} className="group rounded-xl bg-white shadow-[0_0_0_1px_#e5e7eb] [&_summary::-webkit-details-marker]:hidden">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 text-[15px] font-medium tracking-[-0.02em]">{q}<ChevronDown className="size-4 shrink-0 text-[#7a7a7a] transition-transform group-open:rotate-180" /></summary>
