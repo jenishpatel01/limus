@@ -26,13 +26,13 @@ export function PixelMosaic({ cols = 32, rows = 12, seed = 7, className, animate
   }
   return (
     <svg className={className} viewBox={`0 0 ${cols} ${rows}`} preserveAspectRatio="xMidYMid slice" aria-hidden>
-      <rect width={cols} height={rows} fill="#e9eefc" />
+      <rect width={cols} height={rows} style={{ fill: "var(--mosaic-bg)" }} />
       {cells.map((c, i) => {
         // Every 7th strong pixel gently pulses, like the template's animated mosaic.
         const tw = animated && c.o > 0.5 && i % 7 === 0;
         return (
-          <rect key={`${c.x}-${c.y}`} x={c.x} y={c.y} width={1.002} height={1.002} fill="#124eeb" opacity={c.o.toFixed(3)}
-            className={tw ? "twinkle" : undefined} style={tw ? ({ "--o": c.o.toFixed(3), animationDelay: `${(i % 13) * 0.35}s` } as React.CSSProperties) : undefined} />
+          <rect key={`${c.x}-${c.y}`} x={c.x} y={c.y} width={1.002} height={1.002} style={{ fill: "var(--primary)", ...(tw ? ({ "--o": c.o.toFixed(3), animationDelay: `${(i % 13) * 0.35}s` } as React.CSSProperties) : {}) }} opacity={c.o.toFixed(3)}
+            className={tw ? "twinkle" : undefined} />
         );
       })}
     </svg>

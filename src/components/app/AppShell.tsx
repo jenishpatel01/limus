@@ -15,7 +15,7 @@ import { DataProvider, useData } from "@/lib/data/store";
 import { Logo } from "@/components/brand/Logo";
 import { Badge, Button, ButtonLink, cx, IconButton, Menu, MenuItem, Skeleton, Toaster, Toggle } from "@/components/ui";
 import { MAIN_NAV, SECONDARY_NAV, isActive, type NavItem } from "./nav";
-import { useTheme } from "./theme";
+import { applyThemeAnimated, useTheme } from "./theme";
 import { relativeTime } from "@/lib/format";
 
 /** Loads the session, then the user's data, then renders the shell. */
@@ -131,7 +131,7 @@ function initials(name: string) {
 function SidebarContent() {
   const { user, profile, signOut } = useData();
   const path = usePathname();
-  const { resolved, set } = useTheme();
+  const { resolved } = useTheme();
   const name = profile?.display_name || user.email?.split("@")[0] || "Trader";
 
   return (
@@ -166,7 +166,7 @@ function SidebarContent() {
         <ul className="flex flex-col gap-0.5">{SECONDARY_NAV.map((item) => <NavLink key={item.href} item={item} active={isActive(item, path)} />)}</ul>
         <div className="mt-0.5 flex h-9 items-center justify-between rounded-lg px-2.5 text-[14px] text-ink-3">
           <span className="flex items-center gap-2.5"><Moon className="size-[17px]" strokeWidth={1.5} />Dark mode</span>
-          <Toggle label="Dark mode" checked={resolved === "dark"} onChange={(v) => set(v ? "dark" : "light")} />
+          <Toggle label="Dark mode" checked={resolved === "dark"} onChange={(v) => applyThemeAnimated(v ? "dark" : "light")} />
         </div>
         <button type="button" onClick={() => void signOut()} className="flex h-9 w-full items-center gap-2.5 rounded-lg px-2.5 text-[14px] text-ink-3 transition-colors hover:bg-muted-bg hover:text-ink">
           <LogOut className="size-[17px]" strokeWidth={1.5} />Log out

@@ -37,7 +37,8 @@ export function useMotionPrefs() {
 /** Entrance from below. Blur only on capable screens. */
 export const fadeUp = (lite: boolean, distance = 36): Variants => ({
   hidden: { opacity: 0, y: lite ? Math.min(20, distance) : distance, ...(lite ? {} : { filter: "blur(12px)" }) },
-  show: { opacity: 1, y: 0, ...(lite ? {} : { filter: "blur(0px)" }), transition: { duration: lite ? DUR.base : DUR.long, ease: EASE } },
+  // transitionEnd drops the filter once settled, so text renders crisp (no lingering compositing layer).
+  show: { opacity: 1, y: 0, ...(lite ? {} : { filter: "blur(0px)", transitionEnd: { filter: "none" } }), transition: { duration: lite ? DUR.base : DUR.long, ease: EASE } },
 });
 
 export const fade: Variants = {
@@ -76,5 +77,5 @@ export const popover: Variants = {
 /** Route-level content entrance (fast so navigation never feels delayed). */
 export const page = (lite: boolean): Variants => ({
   hidden: { opacity: 0, y: lite ? 14 : 28, ...(lite ? {} : { filter: "blur(6px)" }) },
-  show: { opacity: 1, y: 0, ...(lite ? {} : { filter: "blur(0px)" }), transition: { duration: DUR.base, ease: EASE } },
+  show: { opacity: 1, y: 0, ...(lite ? {} : { filter: "blur(0px)", transitionEnd: { filter: "none" } }), transition: { duration: DUR.base, ease: EASE } },
 });

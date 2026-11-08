@@ -76,7 +76,7 @@ export function Words({ text, className, delay = 0.1, as = "h1" }: { text: strin
             return (
               <motion.span key={wi} className="inline-block whitespace-pre"
                 initial={reduce ? false : { opacity: 0, y: "0.8em", rotate: 2, ...(lite ? {} : { filter: "blur(14px)" }) }}
-                animate={{ opacity: 1, y: 0, rotate: 0, ...(lite ? {} : { filter: "blur(0px)" }) }}
+                animate={{ opacity: 1, y: 0, rotate: 0, ...(lite ? {} : { filter: "blur(0px)", transitionEnd: { filter: "none" } }) }}
                 transition={{ duration: DUR.long + 0.2, ease: EASE, delay: delay + idx * 0.11 }}>
                 {w}{wi < arr.length - 1 ? " " : ""}
               </motion.span>
@@ -88,18 +88,63 @@ export function Words({ text, className, delay = 0.1, as = "h1" }: { text: strin
   );
 }
 
-/** Each line slides up from behind a mask when scrolled into view (editorial heading reveal). */
-export function MaskText({ lines, className, as = "h2", delay = 0 }: { lines: string[]; className?: string; as?: "h1" | "h2" | "h3" | "p"; delay?: number }) {
+/**
+ * Each line slides up from behind a mask when scrolled into view (editorial heading reveal).
+ * A line can be plain text or [text, className] to style it (e.g. a muted second line).
+ */
+export function MaskText({ lines, className, as = "h2", delay = 0 }: { lines: (string | [string, string])[]; className?: string; as?: "h1" | "h2" | "h3" | "p"; delay?: number }) {
   const { reduce } = useMotionPrefs();
   const M = motion[as];
+  const items = lines.map((l) => (typeof l === "string" ? [l, ""] as const : l));
   return (
-    <M className={className} aria-label={lines.join(" ")} initial={reduce ? false : "hidden"} whileInView="show" viewport={{ once: true, amount: 0.6 }} variants={stagger(0.14, delay)}>
-      {lines.map((l, i) => (
+    <M className={className} aria-label={items.map(([t]) => t).join(" ")} initial={reduce ? false : "hidden"} whileInView="show" viewport={{ once: true, amount: 0.5 }} variants={stagger(0.14, delay)}>
+      {items.map(([t, c], i) => (
         <span key={i} className="block overflow-hidden pb-[0.08em]" aria-hidden>
-          <motion.span className="block" variants={maskLine}>{l}</motion.span>
+          <motion.span className={`block ${c}`} variants={maskLine}>{t}</motion.span>
         </span>
       ))}
     </M>
+  );
+}
+
+/** Content that drifts down, shrinks and fades as it scrolls out of the top of the viewport (hero exit). */
+export function ScrollFadeOut({ children, className }: { children: ReactNode; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { reduce, lite } = useMotionPrefs();
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
+  const opacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
+  const y = useTransform(scrollYProgress, [0, 1], [0, lite ? 60 : 160]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, lite ? 0.97 : 0.92]);
+  return (
+    <div ref={ref} className={className}>
+      <motion.div style={reduce ? undefined : { opacity, y, scale }}>{children}</motion.div>
+    </div>
+  );
+}
+
+/** Progress bar that grows from the left when scrolled into view. */
+export function GrowBar({ width, className }: { width: number; className?: string }) {
+  const { reduce } = useMotionPrefs();
+  return (
+    <motion.span className={className} style={{ width: `${width}%`, transformOrigin: "0% 50%" }}
+      initial={reduce ? false : { scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true, amount: 1 }}
+      transition={{ duration: 1.3, ease: EASE, delay: 0.3 }} />
+  );
+}
+
+/** Panel that tilts up from a 3D angle into place as it scrolls into view (product screenshot reveal). */
+export function ScrollTiltIn({ children, className }: { children: ReactNode; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { reduce, lite } = useMotionPrefs();
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "start 0.3"] });
+  const rotateX = useTransform(scrollYProgress, [0, 1], [lite ? 10 : 28, 0]);
+  const scale = useTransform(scrollYProgress, [0, 1], [lite ? 0.94 : 0.84, 1]);
+  const y = useTransform(scrollYProgress, [0, 1], [lite ? 40 : 120, 0]);
+  const opacity = useTransform(scrollYProgress, [0, 0.45], [0.2, 1]);
+  return (
+    <div ref={ref} className={className} style={{ perspective: 1400 }}>
+      <motion.div style={reduce ? undefined : { rotateX, scale, y, opacity, transformOrigin: "50% 0%" }}>{children}</motion.div>
+    </div>
   );
 }
 
