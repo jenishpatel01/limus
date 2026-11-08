@@ -36,9 +36,11 @@ export function useMotionPrefs() {
 
 /** Entrance from below. Blur only on capable screens. */
 export const fadeUp = (lite: boolean, distance = 36): Variants => ({
-  hidden: { opacity: 0, y: lite ? Math.min(20, distance) : distance, ...(lite ? {} : { filter: "blur(12px)" }) },
+  // The filter key must exist in BOTH modes: the server renders the non-lite hidden state (blurred),
+  // and when a phone then switches to lite mode, "show" still has to animate that blur away.
+  hidden: { opacity: 0, y: lite ? Math.min(20, distance) : distance, filter: lite ? "blur(0px)" : "blur(12px)" },
   // transitionEnd drops the filter once settled, so text renders crisp (no lingering compositing layer).
-  show: { opacity: 1, y: 0, ...(lite ? {} : { filter: "blur(0px)", transitionEnd: { filter: "none" } }), transition: { duration: lite ? DUR.base : DUR.long, ease: EASE } },
+  show: { opacity: 1, y: 0, filter: "blur(0px)", transitionEnd: { filter: "none" }, transition: { duration: lite ? DUR.base : DUR.long, ease: EASE } },
 });
 
 export const fade: Variants = {

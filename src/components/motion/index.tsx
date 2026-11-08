@@ -75,8 +75,8 @@ export function Words({ text, className, delay = 0.1, as = "h1" }: { text: strin
             const idx = i++;
             return (
               <motion.span key={wi} className="inline-block whitespace-pre"
-                initial={reduce ? false : { opacity: 0, y: "0.8em", rotate: 2, ...(lite ? {} : { filter: "blur(14px)" }) }}
-                animate={{ opacity: 1, y: 0, rotate: 0, ...(lite ? {} : { filter: "blur(0px)", transitionEnd: { filter: "none" } }) }}
+                initial={reduce ? false : { opacity: 0, y: "0.8em", rotate: 2, filter: lite ? "blur(0px)" : "blur(14px)" }}
+                animate={{ opacity: 1, y: 0, rotate: 0, filter: "blur(0px)", transitionEnd: { filter: "none" } }}
                 transition={{ duration: DUR.long + 0.2, ease: EASE, delay: delay + idx * 0.11 }}>
                 {w}{wi < arr.length - 1 ? " " : ""}
               </motion.span>

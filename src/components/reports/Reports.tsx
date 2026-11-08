@@ -97,7 +97,7 @@ export function ReportsPage() {
     <>
       <PageHeader title="Reports" icon={<FileText />} description="Performance reports from your trades, ready to download as PDF or CSV." />
       <Card className="mb-6 p-5">
-        <Segmented size="md" ariaLabel="Report type" value={period} onChange={setPeriod} options={TYPES} />
+        <Segmented size="md" ariaLabel="Report type" value={period} onChange={setPeriod} options={TYPES} className="flex-wrap sm:flex-nowrap" />
         <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {(period === "daily" || period === "weekly") && <Field label={period === "daily" ? "Day" : "Any day in the week"} htmlFor="r-day"><Input id="r-day" type="date" value={anchor} max={today} onChange={(e) => setAnchor(e.target.value)} /></Field>}
           {period === "monthly" && <Field label="Month" htmlFor="r-month"><Input id="r-month" type="month" value={month} onChange={(e) => setMonth(e.target.value)} /></Field>}
