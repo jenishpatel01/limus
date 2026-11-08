@@ -22,6 +22,7 @@
   --ink-3: #3d3d3d;
   --body: #616161;
   --mosaic-bg: #e9eefc;
+  --mosaic-glow: #ffffff;
   --muted: #7a7a7a;
   --faint: #adadad;
   --primary: #124eeb;
@@ -62,6 +63,7 @@
   --ink-3: #d4d4d4;
   --body: #a3a3a3;
   --mosaic-bg: #070d1c;
+  --mosaic-glow: #80b9ff;
   --muted: #8a8a8a;
   --faint: #5c5c5c;
   --primary: #2b62f0;
@@ -259,6 +261,19 @@
   .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
 }
 
+/* Pixel mosaic (CTA band, auth screens): fast flashes, breathing squares, a light sweep and cursor flares. */
+@keyframes mz-flash { 0%, 100% { opacity: var(--o) } 40% { opacity: 1; fill: var(--primary-light) } 70% { opacity: calc(var(--o) * .6) } }
+@keyframes mz-soft { 0%, 100% { opacity: var(--o) } 50% { opacity: calc(var(--o) * 3.2) } }
+@keyframes mz-hit { 0% { opacity: 1; fill: var(--primary-light) } 100% { opacity: var(--o) } }
+@keyframes mz-sweep { from { transform: translateX(0) } to { transform: translateX(calc(var(--mz-w, 60px) * 1)) } }
+.mz-flash { animation: mz-flash var(--d, 1.2s) ease-in-out var(--dl, 0s) infinite; }
+.mz-soft { animation: mz-soft var(--d, 2s) ease-in-out var(--dl, 0s) infinite; }
+.mz-cell:hover { animation: mz-hit 1.3s cubic-bezier(.22, 1, .36, 1); }
+.mz-sweep { animation: mz-sweep 3.2s cubic-bezier(.45, 0, .55, 1) infinite; }
+
+/* Soft backdrop behind the CTA text so it stays readable over bright squares. */
+.cta-scrim { background: radial-gradient(ellipse 46% 62% at 50% 50%, color-mix(in oklab, var(--bg) 88%, transparent), transparent 78%); }
+
 /* Landing page intro: logo builds in, a progress line runs, then the cover wipes upward to reveal
    the page. Pure CSS so it always finishes, even if JavaScript is slow or fails. */
 .page-intro { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; background: var(--bg);
@@ -288,6 +303,7 @@ details[open] > .faq-answer { animation: faq-in .45s cubic-bezier(.22, 1, .36, 1
 
 @media (prefers-reduced-motion: reduce) {
   .page-intro { display: none; }
+  .mz-flash, .mz-soft, .mz-sweep, .twinkle { animation: none !important; }
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
 

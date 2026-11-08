@@ -388,10 +388,12 @@ function Cta() {
   return (
     <section className="relative overflow-hidden">
       <PixelMosaic className="absolute inset-0 h-full w-full" cols={40} rows={12} animated />
-      <div className="relative mx-auto flex max-w-[1400px] flex-col items-center px-4 py-28 text-center sm:py-36">
+      <div aria-hidden className="cta-scrim pointer-events-none absolute inset-0" />
+      {/* pointer-events-none lets the cursor reach the squares behind; the buttons switch it back on. */}
+      <div className="pointer-events-none relative mx-auto flex max-w-[1400px] flex-col items-center px-4 py-28 text-center sm:py-36">
         <MaskText lines={["Ready to trade", "with more clarity?"]} className="text-[34px] font-medium leading-[1.08] tracking-[-0.04em] text-ink sm:text-[52px]" />
         <Reveal delay={0.25}>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
+          <div className="pointer-events-auto mt-8 flex flex-wrap justify-center gap-3">
             <Link href="/register" className={`${btnPrimary} group`}>Start for free <ArrowRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-1" /></Link>
             <a href="#features" className={btnSecondary}>See features</a>
           </div>
