@@ -150,9 +150,11 @@ export function RegisterForm() {
 }
 
 export function ForgotForm() {
+  const params = useSearchParams();
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  // A broken or used-up email link lands here with ?error=..., so say so instead of silently showing the form.
+  const [error, setError] = useState<string | null>(params.get("error"));
   const [loading, setLoading] = useState(false);
 
   async function submit(e: FormEvent) {
@@ -179,6 +181,44 @@ export function ForgotForm() {
         </form>
       )}
       <Link href="/login" className="mt-6 inline-block text-[14px] text-primary-text hover:underline">Back to sign in</Link>
+    </>
+  );
+}
+
+const CONFIRM_COPY: Record<string, { title: string; sub: string; button: string }> = {
+  recovery: { title: "Reset your password", sub: "Press continue to choose a new password.", button: "Continue" },
+  email: { title: "Confirm your email", sub: "One more step to finish creating your account.", button: "Confirm email" },
+  signup: { title: "Confirm your email", sub: "One more step to finish creating your account.", button: "Confirm email" },
+};
+
+/**
+ * Landing page for links in Supabase emails. It only shows a button; the link is used up when the button is
+ * pressed. That keeps the one-time link safe from email scanners (which open links but never press buttons),
+ * and, because it verifies on the server by token, it works even when the email is opened on another device
+ * than the one that asked for it.
+ */
+export function ConfirmLink() {
+  const params = useSearchParams();
+  const tokenHash = params.get("token_hash");
+  const type = params.get("type") ?? "";
+  const next = params.get("next") ?? "/app";
+  const copy = CONFIRM_COPY[type];
+
+  if (!tokenHash || !copy) {
+    return (
+      <>
+        <Heading title="Link incomplete" sub="This link is missing some information. Please request a new one." />
+        <Link href="/forgot-password" className="text-[14px] text-primary-text hover:underline">Request a new link</Link>
+      </>
+    );
+  }
+  const href = `/auth/callback?token_hash=${encodeURIComponent(tokenHash)}&type=${encodeURIComponent(type)}&next=${encodeURIComponent(next)}`;
+  return (
+    <>
+      <Heading title={copy.title} sub={copy.sub} />
+      {/* A plain <a> (not <Link>) on purpose: Link would prefetch the address and use up the one-time link. */}
+      {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+      <a href={href} className="inline-flex h-11 w-full items-center justify-center rounded-md bg-primary px-4 text-[14px] font-semibold text-white shadow-btn transition-colors hover:bg-primary-hover active:scale-[0.98]">{copy.button}</a>
     </>
   );
 }
