@@ -14,6 +14,10 @@ function safeNext(raw: string | null, fallback: string) {
 function authMessage(msg: string) {
   if (/invalid login credentials/i.test(msg)) return "Email or password is incorrect.";
   if (/email not confirmed/i.test(msg)) return "Please confirm your email first. Check your inbox for the link.";
+  // The email service allows only so many emails per hour for the whole site; this is not about the user's own attempts.
+  if (/email rate limit/i.test(msg)) return "We can't send more emails right now because our email service has reached its hourly limit. Please try again in a little while.";
+  const wait = /after (\d+) seconds/i.exec(msg);
+  if (wait) return `For security, please wait ${wait[1]} seconds before requesting another email.`;
   if (/rate limit/i.test(msg)) return "Too many attempts. Please wait a minute and try again.";
   if (/already registered/i.test(msg)) return "An account with this email already exists. Try signing in.";
   if (/password should be/i.test(msg) || /weak password/i.test(msg)) return "Choose a stronger password (at least 8 characters).";
