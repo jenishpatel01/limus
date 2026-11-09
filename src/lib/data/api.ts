@@ -95,6 +95,13 @@ async function deleteWhere(table: Table, column: string, values: string[]) {
 }
 
 export const api = {
+  /** Reads just the profile row (used to double-check onboarding status against the database). */
+  async getProfile(id: string) {
+    const { data, error } = await supabase().from("profiles").select("*").eq("id", id).maybeSingle();
+    if (error) throw friendly(error, "Couldn't load your profile");
+    return (data as Profile | null) ?? null;
+  },
+
   async updateProfile(id: string, patch: Partial<Profile>) {
     const { data, error } = await supabase().from("profiles").update(patch).eq("id", id).select("*").single();
     if (error) throw friendly(error, "Couldn't save your profile");

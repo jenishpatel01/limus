@@ -11,6 +11,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { PageTransition } from "@/components/motion";
 import { EASE } from "@/components/motion/variants";
 import { supabase } from "@/lib/supabase/client";
+import { api } from "@/lib/data/api";
 import { DataProvider, useData } from "@/lib/data/store";
 import { Logo } from "@/components/brand/Logo";
 import { Badge, Button, ButtonLink, cx, IconButton, Menu, MenuItem, Skeleton, Toaster, Toggle } from "@/components/ui";
@@ -62,7 +63,7 @@ function ShellSkeleton() {
 }
 
 function Shell({ children }: { children: ReactNode }) {
-  const { ready, error, profile, reload } = useData();
+  const { ready, error, profile, reload, user } = useData();
   const router = useRouter();
   const path = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -70,8 +71,17 @@ function Shell({ children }: { children: ReactNode }) {
   // Close the mobile menu after navigating (derived state, no effect needed).
   if (menuPath !== path) { setMenuPath(path); setMobileOpen(false); }
   useEffect(() => {
-    if (ready && !error && profile && !profile.onboarded_at) router.replace("/onboarding");
-  }, [ready, error, profile, router]);
+    if (!(ready && !error && profile && !profile.onboarded_at)) return;
+    // Right after finishing onboarding, this screen can still hold the profile from before the final
+    // save (it arrives a moment ahead of the fresh copy). So confirm with the database before sending
+    // anyone back to the start, otherwise the click looks stuck until a refresh.
+    let cancelled = false;
+    api.getProfile(user.id).then(
+      (fresh) => { if (cancelled) return; if (fresh?.onboarded_at) void reload(); else router.replace("/onboarding"); },
+      () => { if (!cancelled) router.replace("/onboarding"); },
+    );
+    return () => { cancelled = true; };
+  }, [ready, error, profile, router, reload, user.id]);
 
   return (
     <div className="flex min-h-dvh bg-bg">
