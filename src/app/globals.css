@@ -300,6 +300,11 @@
 @keyframes rise { from { opacity: 0; transform: translateY(18px) } to { opacity: 1; transform: none } }
 @keyframes shimmer { from { background-position: -200% 0 } to { background-position: 200% 0 } }
 
+/* Native <select> pop-ups are drawn by the browser: give them an opaque themed background so options
+   never inherit the translucent glass input (white-on-white in dark mode). */
+select option, select optgroup { background-color: var(--surface-raised); color: var(--ink); }
+select option:checked { background-color: var(--primary-soft); color: var(--ink); }
+
 @layer base {
   html { -webkit-text-size-adjust: 100%; }
   body {

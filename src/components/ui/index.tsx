@@ -374,26 +374,56 @@ export function ConfirmDialog({ open, onClose, onConfirm, title, description, co
 /** Lightweight dropdown menu. */
 export function Menu({ trigger, children, align = "end", className }: { trigger: (p: { open: boolean; toggle: () => void }) => ReactNode; children: (close: () => void) => ReactNode; align?: "start" | "end"; className?: string }) {
   const [open, setOpen] = useState(false);
+  const [pos, setPos] = useState<{ top?: number; bottom?: number; left?: number; right?: number } | null>(null);
   const ref = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  // The menu is drawn on <body> with fixed coordinates so table/card `overflow` can never clip it.
   useEffect(() => {
     if (!open) return;
-    const onDoc = (e: MouseEvent) => { if (!ref.current?.contains(e.target as Node)) setOpen(false); };
+    const place = () => {
+      const r = ref.current?.getBoundingClientRect();
+      if (!r) return;
+      const vw = document.documentElement.clientWidth, vh = window.innerHeight;
+      const h = menuRef.current?.offsetHeight ?? 0;
+      const below = vh - r.bottom, flip = h > 0 && below < h + 12 && r.top > below;
+      setPos({
+        ...(flip ? { bottom: vh - r.top + 6 } : { top: r.bottom + 6 }),
+        ...(align === "end" ? { right: Math.max(8, vw - r.right) } : { left: Math.max(8, r.left) }),
+      });
+    };
+    place();
+    const raf = requestAnimationFrame(place); // re-measure once the menu has its real height
+    const onDoc = (e: MouseEvent) => {
+      const t = e.target as Node;
+      if (!ref.current?.contains(t) && !menuRef.current?.contains(t)) setOpen(false);
+    };
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    const onMove = () => setOpen(false);
     document.addEventListener("mousedown", onDoc);
     document.addEventListener("keydown", onKey);
-    return () => { document.removeEventListener("mousedown", onDoc); document.removeEventListener("keydown", onKey); };
-  }, [open]);
+    window.addEventListener("resize", onMove);
+    window.addEventListener("scroll", onMove, true);
+    return () => {
+      cancelAnimationFrame(raf);
+      document.removeEventListener("mousedown", onDoc); document.removeEventListener("keydown", onKey);
+      window.removeEventListener("resize", onMove); window.removeEventListener("scroll", onMove, true);
+    };
+  }, [open, align]);
   return (
     <div ref={ref} className="relative">
       {trigger({ open, toggle: () => setOpen((o) => !o) })}
-      <AnimatePresence>
-        {open && (
-          <motion.div role="menu" variants={popover} initial="hidden" animate="show" exit="exit" style={{ transformOrigin: align === "end" ? "top right" : "top left" }}
-            className={cx("glass-strong absolute z-40 mt-1.5 min-w-48 rounded-lg p-1", align === "end" ? "right-0" : "left-0", className)}>
-            {children(() => setOpen(false))}
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {typeof document !== "undefined" && createPortal(
+        <AnimatePresence>
+          {open && pos && (
+            <motion.div ref={menuRef} role="menu" variants={popover} initial="hidden" animate="show" exit="exit"
+              style={{ ...pos, transformOrigin: `${pos.bottom != null ? "bottom" : "top"} ${align === "end" ? "right" : "left"}` }}
+              className={cx("glass-strong fixed z-[90] min-w-48 rounded-lg p-1", className)}>
+              {children(() => setOpen(false))}
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body,
+      )}
     </div>
   );
 }
